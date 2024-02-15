@@ -5,6 +5,7 @@ plugins {
 }
 
 version = project.mod_version
+description = project.mod_description
 group = project.maven_group
 
 base {
@@ -50,6 +51,7 @@ dependencies {
 
 processResources {
     inputs.property "version", project.version
+    inputs.property "description", project.description
     inputs.property "minecraft_version", project.minecraft_version
     inputs.property "loader_version", project.loader_version
     inputs.property 'fabric_kotlin_version', fabric_kotlin_version
@@ -57,6 +59,7 @@ processResources {
 
     filesMatching("fabric.mod.json") {
         expand "version": project.version,
+                "description": project.description,
                 "minecraft_version": project.minecraft_version,
                 "loader_version": project.loader_version,
                 "fabric_kotlin_version": fabric_kotlin_version
@@ -88,7 +91,7 @@ java {
 
 jar {
     from("LICENSE") {
-        rename { "${it}_${project.archivesBaseName}"}
+        rename { "${it}_${project.archivesBaseName}" }
     }
 }
 
@@ -110,5 +113,5 @@ publishing {
 }
 
 kotlin {
-   jvmToolchain(17)
+    jvmToolchain(17)
 }

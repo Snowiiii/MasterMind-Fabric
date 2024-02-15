@@ -3,14 +3,14 @@
   "id": "mastermind",
   "version": "${version}",
   "name": "MasterMind",
-  "description": "",
+  "description": "${description}",
   "authors": [
     "Snowii"
   ],
   "contact": {
     "repo": "https://github.com/Snowiiii/MasterMind"
   },
-  "license": "All-Rights-Reserved",
+  "license": "GNU General Public License v3.0",
   "icon": "assets/mastermind/icon.png",
   "environment": "client",
   "entrypoints": {
