@@ -4,6 +4,7 @@ import de.snowii.mastermind.module.modules.combat.KillAura
 import de.snowii.mastermind.module.modules.combat.TriggerBot
 import de.snowii.mastermind.module.modules.`fun`.Derp
 import de.snowii.mastermind.module.modules.movement.Sprint
+import de.snowii.mastermind.module.modules.player.AutoArmor
 import de.snowii.mastermind.module.modules.world.Scaffold
 
 object ModuleManager {
@@ -13,6 +14,9 @@ object ModuleManager {
         // COMBAT
         registerModule(KillAura())
         registerModule(TriggerBot())
+
+        // PLAYER
+        registerModule(AutoArmor())
 
         // MOVEMENT
         registerModule(Sprint())
