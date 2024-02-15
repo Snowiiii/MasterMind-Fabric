@@ -1,0 +1,11 @@
+accessWidener	v2	named
+
+accessible field net/minecraft/client/MinecraftClient session Lnet/minecraft/client/session/Session;
+mutable field net/minecraft/client/MinecraftClient session Lnet/minecraft/client/session/Session;
+accessible field net/minecraft/client/MinecraftClient authenticationService Lcom/mojang/authlib/yggdrasil/YggdrasilAuthenticationService;
+accessible field net/minecraft/client/MinecraftClient profileKeys Lnet/minecraft/client/session/ProfileKeys;
+mutable field net/minecraft/client/MinecraftClient profileKeys Lnet/minecraft/client/session/ProfileKeys;
+accessible field net/minecraft/client/MinecraftClient sessionService Lcom/mojang/authlib/minecraft/MinecraftSessionService;
+mutable field net/minecraft/client/MinecraftClient sessionService Lcom/mojang/authlib/minecraft/MinecraftSessionService;
+
+accessible method net/minecraft/client/MinecraftClient doAttack ()Z

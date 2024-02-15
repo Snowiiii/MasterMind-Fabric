@@ -1,0 +1,17 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "de.snowii.mastermind.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "client": [
+    "client.MixinMinecraftClient",
+    "client.MixinClientPlayerEntity",
+    "client.MixinKeyBoard",
+    "client.entity.MixinEntity",
+    "client.gui.MixinTitleScreen",
+    "client.render.MixinGameRenderer"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
