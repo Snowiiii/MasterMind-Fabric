@@ -29,7 +29,7 @@ object RotationUtils {
     fun getRotationsToEntity(target: Entity, speed: Float): FloatArray {
         val player = mc.player!!
         val d: Double = target.x - player.x
-        val e: Double = target.y - player.eyeY
+        val e: Double = target.eyeY - player.eyeY
         val f: Double = target.z - player.z
         val d3 = hypot(d, f)
         val yaw = MathHelper.wrapDegrees((MathHelper.atan2(f, d) * 57.2957763671875).toFloat() - 90.0f)

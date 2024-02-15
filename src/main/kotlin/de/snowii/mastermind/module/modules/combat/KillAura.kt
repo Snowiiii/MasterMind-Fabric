@@ -53,12 +53,12 @@ class KillAura : Module("KillAura", "Attacks Entities nearby", Category.COMBAT) 
                     toggle(false)
                 }
         })
-        WorldRenderEvents.AFTER_ENTITIES.register(WorldRenderEvents.AfterEntities { context: WorldRenderContext ->
+        WorldRenderEvents.BEFORE_DEBUG_RENDER.register(WorldRenderEvents.DebugRender { context: WorldRenderContext ->
             if (targets != null)
                 run {
                     targets!!.forEach { entity: Entity ->
                         run {
-                            RenderUtil.renderTargetESPCircle(context, entity, 2F, 2F, 2F, 255F, 2, 1F, 1F)
+                            RenderUtil.renderTargetESPCircle(context, entity, 1.0f, 1.0f, 0.0f, 1.0f, 2, 3F, 1F)
                         }
                     }
                 }
@@ -90,7 +90,7 @@ class KillAura : Module("KillAura", "Attacks Entities nearby", Category.COMBAT) 
             if (RAY_TRACE.value) {
                 RotationUtils.rayTrace(rotations[0], rotations[1])
                 if (mc.crosshairTarget != null && mc.crosshairTarget!!.type == HitResult.Type.ENTITY) {
-                    attackEntityRaytrace()
+                    attackEntity(entity as LivingEntity)
                 }
             } else {
                 attackEntity(entity as LivingEntity)
@@ -128,20 +128,20 @@ class KillAura : Module("KillAura", "Attacks Entities nearby", Category.COMBAT) 
     private fun attackEntity(entity: LivingEntity) {
         if (!mc.player!!.isUsingItem && hitTimer.hasTimeReached((1000 / current_cps).toLong())) {
             if (mc.attackCooldown <= 0) {
-                mc.interactionManager!!.attackEntity(mc.player, entity)
-                mc.player!!.swingHand(Hand.MAIN_HAND)
+                if (RAY_TRACE.value) {
+                    mc.doAttack()
+                } else {
+                    mc.interactionManager!!.attackEntity(mc.player, entity)
+                    mc.player!!.swingHand(Hand.MAIN_HAND)
+                }
                 current_cps = (CPS_MIN.value..CPS_MAX.value).random()
                 hitTimer.reset()
             }
         }
     }
 
-    private fun attackEntityRaytrace() {
-        if (!mc.player!!.isUsingItem && hitTimer.hasTimeReached((1000 / current_cps).toLong())) {
-            mc.doAttack()
-            current_cps = (CPS_MIN.value..CPS_MAX.value).random()
-            hitTimer.reset()
-        }
+    override fun onDisable() {
+        targets = null
     }
 
 }

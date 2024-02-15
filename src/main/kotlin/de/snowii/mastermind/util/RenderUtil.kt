@@ -2,10 +2,9 @@ package de.snowii.mastermind.util
 
 import com.mojang.blaze3d.systems.RenderSystem
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext
-import net.minecraft.client.MinecraftClient
-import net.minecraft.client.render.GameRenderer
-import net.minecraft.client.render.VertexFormat
-import net.minecraft.client.render.VertexFormats
+import net.minecraft.client.render.RenderLayer
+import net.minecraft.client.render.VertexConsumer
+import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.entity.Entity
 import net.minecraft.util.Util
 import org.joml.Matrix4f
@@ -33,47 +32,52 @@ object RenderUtil {
         val lineSmoothness = 0.2
         val currentY = sin(Util.getEpochTimeMs().toDouble() / (150 - speed)) / 1.4 - 0.8
         val aa = entity.boundingBox
-        val camera = MinecraftClient.getInstance().gameRenderer.camera.pos.negate()
+        val camera = context.camera().pos
+        val vertexConsumer: VertexConsumer =
+            context.consumers()!!.getBuffer(RenderLayer.getDebugLineStrip(width.toDouble()))
         val xx = aa.maxX - camera.x
         val yy = aa.maxY - camera.y
         val zz = aa.maxZ - camera.z
+        val matrices: MatrixStack = context.matrixStack()
 
+        var currentLineY: Double
+
+        RenderSystem.depthMask(false)
         RenderSystem.defaultBlendFunc()
         RenderSystem.disableDepthTest()
         RenderSystem.enableBlend()
-        RenderSystem.lineWidth(width)
-        RenderSystem.setShader { GameRenderer.getPositionColorProgram() }
-        var currentLineY: Double
-        val matrix4f: Matrix4f = context.matrixStack().peek().positionMatrix
-        val tessellator = RenderSystem.renderThreadTesselator()
-        val buffer = tessellator.buffer
+
+        val matrix4f: Matrix4f = matrices.peek().positionMatrix
         for (line in 0 until lines) {
+            matrices.push()
+            matrices.translate(-camera.x, -camera.y, -camera.z);
             currentLineY = line * lineSpacing
-            buffer.begin(VertexFormat.DrawMode.LINE_STRIP, VertexFormats.POSITION_COLOR)
             var i = -boxHeight
             while (i <= boxHeight + 1f) {
-                buffer.vertex(
+                vertexConsumer.vertex(
                     matrix4f,
                     (xx - CENTER + sin((i - lineSmoothness) * 2) / bRadius).toFloat(),
                     (yy + currentY + currentLineY).toFloat(),
                     (zz - CENTER + cos((i - lineSmoothness) * 2) / bRadius).toFloat()
                 ).color(red, green, blue, alpha).next()
-                buffer.vertex(
+                vertexConsumer.vertex(
                     matrix4f,
                     (xx - CENTER + sin((i - lineSmoothness / 2) * 2) / bRadius).toFloat(),
                     (yy + currentY + currentLineY).toFloat(),
                     (zz - CENTER + cos((i - lineSmoothness / 2) * 2) / bRadius).toFloat()
                 ).color(red, green, blue, alpha).next()
-                buffer.vertex(
+                vertexConsumer.vertex(
                     matrix4f,
                     (xx - CENTER + sin(i * 2) / bRadius).toFloat(), (yy + currentY + currentLineY).toFloat(),
                     (zz - CENTER + cos(i * 2) / bRadius).toFloat()
                 ).color(red, green, blue, alpha).next()
                 i += lineSmoothness
             }
-            tessellator.draw()
+            matrices.pop()
         }
+        RenderSystem.depthMask(true)
         RenderSystem.disableBlend()
         RenderSystem.enableDepthTest()
     }
+
 }
