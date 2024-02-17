@@ -17,6 +17,7 @@ import net.minecraft.entity.passive.AnimalEntity
 import net.minecraft.entity.passive.VillagerEntity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.util.Hand
+import net.minecraft.util.hit.EntityHitResult
 import net.minecraft.util.hit.HitResult
 import net.minecraft.util.math.MathHelper
 import net.minecraft.util.math.random.Random
@@ -27,7 +28,7 @@ class KillAura : Module("KillAura", "Attacks Entities nearby", Category.COMBAT) 
 
     private val CPS_MIN = SettingInt("CPS Min", 8, 1, 20)
     private val CPS_MAX = SettingInt("CPS Max", 14, 2, 40)
-    private val RANGE = SettingFloat("Range", 3.4f, 3.0F, 8.0f)
+    private val RANGE = SettingFloat("Range", 3.3f, 3.0F, 8.0f)
 
     private val TARGET_PLAYERS = SettingBoolean("Players", true)
     private val TARGET_ANIMAL = SettingBoolean("Animals", true)
@@ -90,10 +91,10 @@ class KillAura : Module("KillAura", "Attacks Entities nearby", Category.COMBAT) 
             if (RAY_TRACE.value) {
                 RotationUtils.rayTrace(rotations[0], rotations[1])
                 if (mc.crosshairTarget != null && mc.crosshairTarget!!.type == HitResult.Type.ENTITY) {
-                    attackEntity(entity as LivingEntity)
+                    attackEntity((mc.crosshairTarget as EntityHitResult).entity)
                 }
             } else {
-                attackEntity(entity as LivingEntity)
+                attackEntity(entity)
             }
         }
     }
@@ -101,7 +102,7 @@ class KillAura : Module("KillAura", "Attacks Entities nearby", Category.COMBAT) 
     private fun allowToAttack(entity: Entity): Boolean {
         return if (entity is LivingEntity && entity !== mc.player && mc.player!!.distanceTo(
                 entity
-            ) <= RANGE.value && entity.health != 0f && entity.isAlive
+            ) <= RANGE.value && entity.isAlive
         ) {
             when (entity) {
                 is PlayerEntity -> {
@@ -125,18 +126,18 @@ class KillAura : Module("KillAura", "Attacks Entities nearby", Category.COMBAT) 
         } else false
     }
 
-    private fun attackEntity(entity: LivingEntity) {
+    private fun attackEntity(entity: Entity) {
         if (!mc.player!!.isUsingItem && hitTimer.hasTimeReached((1000 / current_cps).toLong())) {
-            if (mc.attackCooldown <= 0) {
-                if (RAY_TRACE.value) {
-                    mc.doAttack()
-                } else {
+            if (RAY_TRACE.value) {
+                mc.doAttack()
+            } else {
+                if (mc.attackCooldown <= 0) {
                     mc.interactionManager!!.attackEntity(mc.player, entity)
                     mc.player!!.swingHand(Hand.MAIN_HAND)
                 }
-                current_cps = (CPS_MIN.value..CPS_MAX.value).random()
-                hitTimer.reset()
             }
+            current_cps = (CPS_MIN.value..CPS_MAX.value).random()
+            hitTimer.reset()
         }
     }
 
