@@ -3,7 +3,7 @@ package de.snowii.mastermind.settings
 import java.util.*
 import java.util.function.BooleanSupplier
 
-class SettingMode : Setting {
+class SettingMode : AbstractSetting {
     val modes: List<String>
     var modeOriginal: String
         private set

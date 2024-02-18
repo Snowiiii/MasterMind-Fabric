@@ -1,5 +1,6 @@
 package de.snowii.mastermind.module
 
+import de.snowii.mastermind.settings.AbstractSetting
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.util.InputUtil
 import net.minecraft.client.util.InputUtil.Key
@@ -9,8 +10,10 @@ abstract class Module(val name: String, val description: String, val category: C
     var key: Key = InputUtil.UNKNOWN_KEY
     var isToggled = false
         private set
+    var settings: MutableList<AbstractSetting> = ArrayList()
 
     protected val mc: MinecraftClient = MinecraftClient.getInstance()
+
 
     open fun onEnable() {}
 
@@ -29,6 +32,10 @@ abstract class Module(val name: String, val description: String, val category: C
 
     fun key(key: Int) {
         this.key = InputUtil.Type.KEYSYM.createFromCode(key)
+    }
+
+    fun addSetting(setting: AbstractSetting) {
+        settings.add(setting)
     }
 
     @JvmOverloads

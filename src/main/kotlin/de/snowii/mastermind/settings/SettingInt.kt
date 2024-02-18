@@ -2,7 +2,7 @@ package de.snowii.mastermind.settings
 
 import java.util.function.BooleanSupplier
 
-class SettingInt : Setting {
+class SettingInt : AbstractSetting {
     var value: Int
     val min: Int
     val max: Int

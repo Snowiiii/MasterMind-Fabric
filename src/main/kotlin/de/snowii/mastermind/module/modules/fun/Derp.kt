@@ -2,7 +2,7 @@ package de.snowii.mastermind.module.modules.`fun`
 
 import de.snowii.mastermind.module.Module
 
-class Derp : Module("Derp", "Spins you around", Category.FUN) {
+object Derp : Module("Derp", "Spins you around", Category.FUN) {
 
     override fun onPreUpdate() {
         val player = mc.player!!

@@ -2,7 +2,8 @@ package de.snowii.mastermind.module.modules.movement
 
 import de.snowii.mastermind.module.Module
 
-class Sprint : Module("Sprint", "Enables Auto Sprinting", Category.MOVEMENT) {
+object Sprint : Module("Sprint", "Enables Auto Sprinting", Category.MOVEMENT) {
+    var instance: Sprint
 
     init {
         toggle(true)
@@ -13,9 +14,4 @@ class Sprint : Module("Sprint", "Enables Auto Sprinting", Category.MOVEMENT) {
         if (mc.player!!.forwardSpeed > 0) mc.player!!.isSprinting = true
     }
 
-    companion object {
-        @JvmStatic
-        lateinit var instance: Sprint
-            private set
-    }
 }

@@ -9,32 +9,35 @@ import de.snowii.mastermind.module.modules.player.ChestStealer
 import de.snowii.mastermind.module.modules.player.InvManager
 import de.snowii.mastermind.module.modules.world.Scaffold
 
+
 object ModuleManager {
     var modules: MutableList<Module> = ArrayList()
 
     init {
         // COMBAT
-        registerModule(KillAura())
-        registerModule(TriggerBot())
+        registerModule(KillAura)
+        registerModule(TriggerBot)
 
         // PLAYER
-        registerModule(AutoArmor())
-        registerModule(ChestStealer())
-        registerModule(InvManager())
+        registerModule(AutoArmor)
+        registerModule(ChestStealer)
+        registerModule(InvManager)
 
         // MOVEMENT
-        registerModule(Sprint())
+        registerModule(Sprint)
 
         // FUN
-        registerModule(Derp())
+        registerModule(Derp)
 
         // WORLD
-        registerModule(Scaffold())
+        registerModule(Scaffold)
     }
 
 
     private fun registerModule(module: Module) {
+        // Register Settings
         modules.add(module)
     }
+
 
 }

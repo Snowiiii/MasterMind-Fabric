@@ -6,7 +6,7 @@ import net.minecraft.util.Formatting
 
 object PlayerUtil {
     private val mc = MinecraftClient.getInstance()
-    private val PREFIX = "[" + Formatting.GOLD + "Vent" + Formatting.RESET + "] "
+    private val PREFIX = "[" + Formatting.GOLD + "MasterMind" + Formatting.RESET + "] "
     fun sendMessage(message: Any) {
         mc.player!!.sendMessage(Text.literal(PREFIX + message.toString()))
     }

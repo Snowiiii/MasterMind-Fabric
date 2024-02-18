@@ -2,7 +2,7 @@ package de.snowii.mastermind.settings
 
 import java.util.function.BooleanSupplier
 
-class SettingFloat : Setting {
+class SettingFloat : AbstractSetting {
     var value: Float
     val min: Float
     val max: Float

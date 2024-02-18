@@ -16,7 +16,7 @@ import net.minecraft.util.math.Direction
 import net.minecraft.util.math.MathHelper
 import org.lwjgl.glfw.GLFW
 
-class Scaffold : Module("Scaffold", "Makes you an professional bridger", Category.WORLD) {
+object Scaffold : Module("Scaffold", "Makes you an professional bridger", Category.WORLD) {
     private val SILENT = SettingBoolean("Silent Switch", true)
     private val SENSITIVITY_ROTATION = SettingBoolean("Sensitivity Rotation", true)
     private val ROTATION_SPEED = SettingFloat("Rotation Speed", 50f, 10f, 100f) { SENSITIVITY_ROTATION.value }

@@ -1,16 +1,17 @@
 package de.snowii.mastermind.module.modules.combat
 
 import de.snowii.mastermind.module.Module
+import de.snowii.mastermind.settings.SettingInt
 import de.snowii.mastermind.util.TimeHelper
 import net.fabricmc.fabric.api.entity.event.v1.ServerEntityWorldChangeEvents
 import net.minecraft.util.hit.HitResult
 
-class TriggerBot : Module("TriggerBot", "Automatically Attacks Entities you look at", Category.COMBAT) {
-    val MIN_CPS: Int = 8
-    val MAX_CPS: Int = 14
+object TriggerBot : Module("TriggerBot", "Automatically Attacks Entities you look at", Category.COMBAT) {
+    private val CPS_MIN = SettingInt("CPS Min", 8, 1, 20)
+    private val CPS_MAX = SettingInt("CPS Max", 14, 2, 40)
 
     var hitTimer = TimeHelper()
-    var current_cps = (MIN_CPS..MAX_CPS).random()
+    var current_cps = (CPS_MIN.value..CPS_MAX.value).random()
 
     init {
         // Disable on world change
@@ -20,13 +21,15 @@ class TriggerBot : Module("TriggerBot", "Automatically Attacks Entities you look
                     toggle(false)
                 }
         })
+        addSetting(CPS_MIN)
+        addSetting(CPS_MAX)
     }
 
     override fun onKeyboardTick() {
         if (!mc.player!!.isUsingItem && mc.crosshairTarget != null && mc.crosshairTarget!!.type == HitResult.Type.ENTITY) {
             if (hitTimer.hasTimeReached(1000L / current_cps)) {
                 mc.doAttack()
-                current_cps = (MIN_CPS..MAX_CPS).random()
+                current_cps = (CPS_MIN.value..CPS_MAX.value).random()
                 hitTimer.reset()
             }
         }

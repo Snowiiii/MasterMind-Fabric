@@ -13,10 +13,9 @@ import net.minecraft.item.ItemStack
 import net.minecraft.screen.slot.SlotActionType
 
 
-class AutoArmor : Module("AutoArmor", "Manages your Armor", Category.PLAYER) {
+object AutoArmor : Module("AutoArmor", "Manages your Armor", Category.PLAYER) {
     private val timeHelper = TimeHelper()
     private val DELAY_MIN = SettingInt("Delay Min", 1, 0, 10) // 10 = 1 sec
-
     private val DELAY_MAX = SettingInt("Delay Max", 2, 0, 10) // 10 = 1 sec
 
     private var delay = 0
@@ -101,6 +100,8 @@ class AutoArmor : Module("AutoArmor", "Manages your Armor", Category.PLAYER) {
                 }
             }
         })
+        addSetting(DELAY_MIN)
+        addSetting(DELAY_MAX)
     }
 
     private fun getArmorValue(item: ArmorItem, stack: ItemStack): Int {

@@ -2,7 +2,7 @@ package de.snowii.mastermind.settings
 
 import java.util.function.BooleanSupplier
 
-class SettingString : Setting {
+class SettingString : AbstractSetting {
     var value: String
 
     constructor(displayName: String, defaultVal: String) : super(displayName, defaultVal, BooleanSupplier { true }) {

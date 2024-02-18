@@ -8,7 +8,7 @@ import net.minecraft.client.gui.screen.ingame.GenericContainerScreen
 import net.minecraft.screen.GenericContainerScreenHandler
 import net.minecraft.screen.slot.SlotActionType
 
-class ChestStealer : Module("CheatStealer", "Steals Cheast content", Category.PLAYER) {
+object ChestStealer : Module("CheatStealer", "Steals Cheast content", Category.PLAYER) {
 
     private val timeHelper = TimeHelper()
     private val DELAY_MIN = SettingInt("Delay Min", 1, 0, 10) // 10 = 1 sec
@@ -51,6 +51,8 @@ class ChestStealer : Module("CheatStealer", "Steals Cheast content", Category.PL
                 }
             }
         })
+        addSetting(DELAY_MIN)
+        addSetting(DELAY_MAX)
     }
 }
 

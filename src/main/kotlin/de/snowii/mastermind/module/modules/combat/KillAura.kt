@@ -23,7 +23,7 @@ import net.minecraft.util.math.MathHelper
 import net.minecraft.util.math.random.Random
 import org.lwjgl.glfw.GLFW
 
-class KillAura : Module("KillAura", "Attacks Entities nearby", Category.COMBAT) {
+object KillAura : Module("KillAura", "Attacks Entities nearby", Category.COMBAT) {
     private val random: Random = Random.create()
 
     private val CPS_MIN = SettingInt("CPS Min", 8, 1, 20)
@@ -64,6 +64,14 @@ class KillAura : Module("KillAura", "Attacks Entities nearby", Category.COMBAT) 
                     }
                 }
         })
+        addSetting(CPS_MIN)
+        addSetting(CPS_MAX)
+        addSetting(RANGE)
+        addSetting(TARGET_MOBS)
+        addSetting(TARGET_ANIMAL)
+        addSetting(TARGET_PLAYERS)
+        addSetting(TARGET_VILLAGER)
+        addSetting(RAY_TRACE)
     }
 
     override fun onPreUpdate() {

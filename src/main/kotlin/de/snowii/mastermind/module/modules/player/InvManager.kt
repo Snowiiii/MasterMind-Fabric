@@ -11,7 +11,7 @@ import net.minecraft.item.ItemStack
 import net.minecraft.item.ToolItem
 import net.minecraft.screen.slot.SlotActionType
 
-class InvManager : Module("InvManager", "Manages your Inventory", Category.PLAYER) {
+object InvManager : Module("InvManager", "Manages your Inventory", Category.PLAYER) {
 
     private val bestTools: MutableMap<Item, MutableMap<Int, Float>> = HashMap()
 
