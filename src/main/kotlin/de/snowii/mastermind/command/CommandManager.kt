@@ -16,34 +16,37 @@ object CommandManager {
         registerCommand(ConfigCommand())
         registerCommand(PanicCommand())
 
-        ClientSendMessageEvents.CHAT.register(ClientSendMessageEvents.Chat { message: String ->
-            run {
-                parseMessage(message)
-            }
+        ClientSendMessageEvents.ALLOW_CHAT.register(ClientSendMessageEvents.AllowChat { message: String ->
+            parseMessage(message)
         });
     }
 
-    private fun parseMessage(message: String) {
+    /**
+     * False = No Send
+     * True = Send
+     */
+    private fun parseMessage(message: String): Boolean {
         if (message.startsWith(PREFIX)) {
             println("a")
             val text = message.removePrefix(PREFIX).split(" ".toRegex())
-                .dropLastWhile { it.isEmpty() }
                 .toTypedArray()
             for (command in commands) {
                 if (command.name.equals(text[0], ignoreCase = true)) {
                     command.onCommand(text)
-                    return
+                    return false
                 } else if (command.aliases != null) {
                     for (alias in command.aliases!!) {
                         if (alias.equals(text[0], ignoreCase = true)) {
                             command.onCommand(text)
-                            return
+                            return false
                         }
                     }
                 }
             }
             PlayerUtil.sendMessage("Unknown Command")
+            return false
         }
+        return true
     }
 
 
