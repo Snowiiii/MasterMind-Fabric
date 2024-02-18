@@ -7,6 +7,7 @@ import de.snowii.mastermind.util.RotationUtils
 import de.snowii.mastermind.util.TimeHelper
 import net.minecraft.block.Block
 import net.minecraft.block.FallingBlock
+import net.minecraft.client.MinecraftClient
 import net.minecraft.item.BlockItem
 import net.minecraft.util.ActionResult
 import net.minecraft.util.Hand
@@ -25,7 +26,6 @@ object Scaffold : Module("Scaffold", "Makes you an professional bridger", Catego
     private val lookTime = TimeHelper()
     private var shouldLook = false
     private var shouldPlace = false
-    private var currentPlayerFacing: Direction? = null
     private var oldSlot = 0
 
     val HAND: Hand = Hand.MAIN_HAND
@@ -43,11 +43,11 @@ object Scaffold : Module("Scaffold", "Makes you an professional bridger", Catego
                 shouldLook = true
             }
         }
-        if (shouldLook) {
+        if (shouldLook && currentPos != null) {
             mc.player!!.isSprinting = false
             val speed = ROTATION_SPEED.value
             val pitch = 80.0f // god bridge
-            val yaw = getRotation(currentFacing == currentPlayerFacing)
+            val yaw = getRotation()
             RotationUtils.setRotation(
                 RotationUtils.updateRotation(mc.player!!.yaw, yaw, speed),
                 RotationUtils.updateRotation(mc.player!!.pitch, pitch, speed)
@@ -62,6 +62,9 @@ object Scaffold : Module("Scaffold", "Makes you an professional bridger", Catego
             lookTime.reset()
             // mc.player.moveCamera = false
         }
+    }
+
+    override fun onKeyboardTick() {
         if (currentPos != null && currentFacing != null && shouldPlace) {
             val stack = mc.player!!.getStackInHand(Hand.MAIN_HAND)
             if (stack == null || stack.item !is BlockItem) {
@@ -89,23 +92,12 @@ object Scaffold : Module("Scaffold", "Makes you an professional bridger", Catego
         return false
     }
 
-    private fun getRotation(forward: Boolean): Float {
-        val rotation = MathHelper.wrapDegrees(RotationUtils.camera_yaw) // TODO Camera rot
-        var i = -180
-        while (i < 220) {
-            if (rotation < i + 25.0 && rotation > i - 25.0) {
-                return if (forward) i.toFloat() - 180f else i.toFloat()
-            }
-            i += 45
-        }
-        return mc.player!!.pitch
+    private fun getRotation(): Float {
+       return RotationUtils.getRotationsToBlock(currentPos!!, 10F)[0]
     }
 
     private fun isBlockBad(block: Block): Boolean {
-        return block.defaultState.isSolidBlock(
-            mc.player!!.world,
-            BlockPos.ORIGIN,
-        ) || block is FallingBlock
+        return block is FallingBlock
     }
 
     private fun setBlockAndFacing(pos: BlockPos) {
@@ -135,9 +127,14 @@ object Scaffold : Module("Scaffold", "Makes you an professional bridger", Catego
     }
 
     private fun placeBlock() {
+        val from = mc.player!!.pos
+        val d: Double = currentPos!!.x - from.x
+        val e: Double = currentPos!!.y - from.y
+        val f: Double = currentPos!!.z - from.z
+
         val actionResult2: ActionResult = mc.interactionManager!!.interactBlock(
             mc.player, HAND,
-            BlockHitResult(currentPos!!.toCenterPos(), currentFacing, currentPos, false)
+            BlockHitResult(from.add(d, e, f), currentFacing, currentPos, false)
         )
         if (actionResult2.isAccepted) {
             if (actionResult2.shouldSwingHand()) {

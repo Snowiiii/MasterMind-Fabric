@@ -8,11 +8,11 @@ import net.minecraft.client.gui.screen.ingame.GenericContainerScreen
 import net.minecraft.screen.GenericContainerScreenHandler
 import net.minecraft.screen.slot.SlotActionType
 
-object ChestStealer : Module("CheatStealer", "Steals Cheast content", Category.PLAYER) {
+object ChestStealer : Module("ChesttStealer", "Steals Cheast content", Category.PLAYER) {
 
     private val timeHelper = TimeHelper()
     private val DELAY_MIN = SettingInt("Delay Min", 1, 0, 10) // 10 = 1 sec
-    private val DELAY_MAX = SettingInt("Delay Max", 2, 0, 10) // 10 = 1 sec
+    private val DELAY_MAX = SettingInt("Delay Max", 3, 0, 10) // 10 = 1 sec
     private val slots: MutableList<Int> = ArrayList()
     private var delay = (DELAY_MIN.value..DELAY_MAX.value).random()
 
@@ -46,7 +46,7 @@ object ChestStealer : Module("CheatStealer", "Steals Cheast content", Category.P
                                     slots.remove(slot)
                                 }
                             }
-                           if (slots.isEmpty()) mc.player!!.closeHandledScreen()
+                            if (slots.isEmpty()) mc.player!!.closeHandledScreen()
                         })
                 }
             }

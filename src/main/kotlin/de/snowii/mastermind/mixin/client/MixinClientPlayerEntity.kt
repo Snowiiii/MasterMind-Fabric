@@ -31,8 +31,8 @@ class MixinClientPlayerEntity(world: ClientWorld?, profile: GameProfile?) : Abst
         )],
     )
     private fun tickPre(ci: CallbackInfo) {
-        saved_yaw = this.getYaw(1.0F)
-        saved_pitch = this.getPitch(1.0F)
+        saved_yaw = this.yaw
+        saved_pitch = this.pitch
         ModuleManager.modules.forEach { module: Module ->
             run {
                 if (module.isToggled) module.onPreUpdate()

@@ -18,7 +18,7 @@ object CommandManager {
 
         ClientSendMessageEvents.ALLOW_CHAT.register(ClientSendMessageEvents.AllowChat { message: String ->
             parseMessage(message)
-        });
+        })
     }
 
     /**

@@ -13,7 +13,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo
 @Mixin(TitleScreen::class)
 class MixinTitleScreen(title: Text?) : Screen(title) {
 
-
     @Inject(
         method = ["initWidgetsNormal()V"],
         at = [At(

@@ -2,8 +2,9 @@ package de.snowii.mastermind.util
 
 import com.mojang.blaze3d.systems.RenderSystem
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext
-import net.minecraft.client.render.RenderLayer
-import net.minecraft.client.render.VertexConsumer
+import net.minecraft.client.MinecraftClient
+import net.minecraft.client.gui.DrawContext
+import net.minecraft.client.render.*
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.entity.Entity
 import net.minecraft.util.Util
@@ -13,6 +14,39 @@ import kotlin.math.sin
 
 
 object RenderUtil {
+
+    fun draw2DLine(
+        context: DrawContext,
+        xPar: Double,
+        yPar: Double,
+        zPar: Double,
+        red: Float,
+        green: Float,
+        blue: Float,
+        alpha: Float,
+        lineWdith: Float
+    ) {
+        val camera = MinecraftClient.getInstance().gameRenderer.camera.pos.negate()
+        val matrix4f: Matrix4f = context.matrices.peek().positionMatrix
+
+        RenderSystem.enableBlend()
+        RenderSystem.lineWidth(lineWdith)
+        RenderSystem.setShader { GameRenderer.getPositionColorProgram() }
+        RenderSystem.defaultBlendFunc()
+        val bufferBuilder = Tessellator.getInstance().buffer
+        bufferBuilder.begin(VertexFormat.DrawMode.LINE_STRIP, VertexFormats.POSITION_COLOR)
+        bufferBuilder.vertex(matrix4f, 0.0F, MinecraftClient.getInstance().player!!.standingEyeHeight, 0.0F)
+            .color(red, green, blue, alpha).next()
+        bufferBuilder.vertex(
+            matrix4f,
+            (xPar - camera.x).toFloat(),
+            (yPar - camera.y).toFloat(),
+            (zPar - camera.z).toFloat()
+        ).color(red, green, blue, alpha)
+            .next()
+        BufferRenderer.drawWithGlobalProgram(bufferBuilder.end())
+        RenderSystem.disableBlend()
+    }
 
     fun renderTargetESPCircle(
         context: WorldRenderContext,
@@ -50,7 +84,7 @@ object RenderUtil {
         val matrix4f: Matrix4f = matrices.peek().positionMatrix
         for (line in 0 until lines) {
             matrices.push()
-            matrices.translate(-camera.x, -camera.y, -camera.z);
+            matrices.translate(-camera.x, -camera.y, -camera.z)
             currentLineY = line * lineSpacing
             var i = -boxHeight
             while (i <= boxHeight + 1f) {

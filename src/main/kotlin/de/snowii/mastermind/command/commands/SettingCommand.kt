@@ -11,7 +11,7 @@ class SettingCommand : Command("Setting", "Sets Module setting", "s", "config", 
         if (args.size >= 4) {
             for (module in ModuleManager.modules) {
                 if (module.name.equals(args[1], ignoreCase = true)) {
-                    for (setting in module.settings!!) {
+                    for (setting in module.settings) {
                         if (setting.name.equals(args[2], ignoreCase = true)) {
                             when (setting) {
                                 is SettingBoolean -> {

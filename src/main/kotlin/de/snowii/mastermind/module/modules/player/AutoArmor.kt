@@ -82,14 +82,14 @@ object AutoArmor : Module("AutoArmor", "Manages your Armor", Category.PLAYER) {
                                             0,
                                             SlotActionType.QUICK_MOVE,
                                             mc.player
-                                        );
+                                        )
                                         mc.interactionManager!!.clickSlot(
                                             mc.player!!.currentScreenHandler.syncId,
                                             adjustedSlot,
                                             0,
                                             SlotActionType.QUICK_MOVE,
                                             mc.player
-                                        );
+                                        )
                                         break
                                     }
                                     delay = 0
