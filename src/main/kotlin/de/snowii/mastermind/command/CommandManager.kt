@@ -16,11 +16,6 @@ object CommandManager {
         registerCommand(ConfigCommand())
         registerCommand(PanicCommand())
 
-        ClientSendMessageEvents.ALLOW_CHAT.register(ClientSendMessageEvents.AllowChat { message: String ->
-            !message.startsWith(
-                PREFIX
-            )
-        })
         ClientSendMessageEvents.CHAT.register(ClientSendMessageEvents.Chat { message: String ->
             run {
                 parseMessage(message)
@@ -30,25 +25,24 @@ object CommandManager {
 
     private fun parseMessage(message: String) {
         if (message.startsWith(PREFIX)) {
-            if (message.startsWith(PREFIX)) {
-                val text = message.replaceFirst(PREFIX.toRegex(), "").split(" ".toRegex())
-                    .dropLastWhile { it.isEmpty() }
-                    .toTypedArray()
-                for (command in commands) {
-                    if (command.name.equals(text[0], ignoreCase = true)) {
-                        command.onCommand(text)
-                        return
-                    } else if (command.aliases != null) {
-                        for (alias in command.aliases!!) {
-                            if (alias.equals(text[0], ignoreCase = true)) {
-                                command.onCommand(text)
-                                return
-                            }
+            println("a")
+            val text = message.removePrefix(PREFIX).split(" ".toRegex())
+                .dropLastWhile { it.isEmpty() }
+                .toTypedArray()
+            for (command in commands) {
+                if (command.name.equals(text[0], ignoreCase = true)) {
+                    command.onCommand(text)
+                    return
+                } else if (command.aliases != null) {
+                    for (alias in command.aliases!!) {
+                        if (alias.equals(text[0], ignoreCase = true)) {
+                            command.onCommand(text)
+                            return
                         }
                     }
                 }
-                PlayerUtil.sendMessage("Unknown Command")
             }
+            PlayerUtil.sendMessage("Unknown Command")
         }
     }
 

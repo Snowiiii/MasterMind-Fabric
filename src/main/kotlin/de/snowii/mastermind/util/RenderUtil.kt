@@ -30,7 +30,7 @@ object RenderUtil {
         val bRadius = 1.5 / entity.width
         val boxHeight = entity.height.toDouble()
         val lineSmoothness = 0.2
-        val currentY = sin(Util.getEpochTimeMs().toDouble() / (150 - speed)) / 1.4 - 0.8
+        val currentY = sin(Util.getMeasuringTimeMs().toDouble() / (150 - speed)) / 1.4 - 0.8
         val aa = entity.boundingBox
         val camera = context.camera().pos
         val vertexConsumer: VertexConsumer =

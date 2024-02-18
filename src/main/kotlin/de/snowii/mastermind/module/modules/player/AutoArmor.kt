@@ -55,11 +55,11 @@ class AutoArmor : Module("AutoArmor", "Manages your Armor", Category.PLAYER) {
                                     }
 
                                     for (slot in 0..PlayerInventory.MAIN_SIZE) {
-                                        val stack: ItemStack = mc.player!!.inventory.getStack(slot)
+                                        val stack = mc.player!!.inventory.getStack(slot)
                                         if (stack == null || stack.item !is ArmorItem) continue
-                                        val item: ArmorItem = stack.item as ArmorItem
-                                        val armorType: Int = item.type.equipmentSlot.entitySlotId
-                                        val armorValue: Int = getArmorValue(item, stack)
+                                        val item = stack.item as ArmorItem
+                                        val armorType = item.type.equipmentSlot.entitySlotId
+                                        val armorValue = getArmorValue(item, stack)
                                         if (armorValue > bestArmorValues[armorType]) {
                                             bestArmorSlots[armorType] = slot
                                             bestArmorValues[armorType] = armorValue
@@ -71,7 +71,7 @@ class AutoArmor : Module("AutoArmor", "Manages your Armor", Category.PLAYER) {
                                         val slot = bestArmorSlots[type]
                                         if (slot == -1) continue
 
-                                        val oldArmor: ItemStack = mc.player!!.inventory.getArmorStack(type)
+                                        val oldArmor = mc.player!!.inventory.getArmorStack(type)
                                         if (oldArmor == null) continue
 
                                         val adjustedSlot =
