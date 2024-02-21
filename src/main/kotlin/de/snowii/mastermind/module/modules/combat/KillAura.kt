@@ -97,7 +97,7 @@ object KillAura : Module("KillAura", "Attacks Entities nearby", Category.COMBAT)
         if (targets == null) return
         targets!!.forEach { entity: Entity ->
             if (RAY_TRACE.value) {
-                RotationUtils.rayTrace(rotations[0], rotations[1])
+               RotationUtils.rayTrace(rotations[0], rotations[1])
                 if (mc.crosshairTarget != null && mc.crosshairTarget!!.type == HitResult.Type.ENTITY) {
                     attackEntity((mc.crosshairTarget as EntityHitResult).entity)
                 }
