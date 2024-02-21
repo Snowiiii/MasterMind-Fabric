@@ -7,14 +7,12 @@ import de.snowii.mastermind.util.RotationUtils
 import de.snowii.mastermind.util.TimeHelper
 import net.minecraft.block.Block
 import net.minecraft.block.FallingBlock
-import net.minecraft.client.MinecraftClient
 import net.minecraft.item.BlockItem
 import net.minecraft.util.ActionResult
 import net.minecraft.util.Hand
 import net.minecraft.util.hit.BlockHitResult
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
-import net.minecraft.util.math.MathHelper
 import org.lwjgl.glfw.GLFW
 
 object Scaffold : Module("Scaffold", "Makes you an professional bridger", Category.WORLD) {
@@ -93,7 +91,7 @@ object Scaffold : Module("Scaffold", "Makes you an professional bridger", Catego
     }
 
     private fun getRotation(): Float {
-       return RotationUtils.getRotationsToBlock(currentPos!!, 10F)[0]
+        return RotationUtils.getRotationsToBlock(currentPos!!, 10F)[0]
     }
 
     private fun isBlockBad(block: Block): Boolean {

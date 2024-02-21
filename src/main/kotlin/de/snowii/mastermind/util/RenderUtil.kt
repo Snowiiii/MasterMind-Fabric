@@ -8,6 +8,7 @@ import net.minecraft.client.render.*
 import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.entity.Entity
 import net.minecraft.util.Util
+import net.minecraft.util.math.ColorHelper
 import org.joml.Matrix4f
 import kotlin.math.cos
 import kotlin.math.sin
@@ -46,6 +47,72 @@ object RenderUtil {
             .next()
         BufferRenderer.drawWithGlobalProgram(bufferBuilder.end())
         RenderSystem.disableBlend()
+    }
+
+    fun smoothTrans(current: Double, last: Double): Float {
+        return (current + (last - current) / (MinecraftClient.getInstance().currentFps / 10)).toFloat()
+    }
+
+    fun drawRoundedRect(
+        context: DrawContext,
+        x: Float,
+        y: Float,
+        width: Float,
+        height: Float,
+        radius: Float,
+        color: Int
+    ) {
+        context.fill(
+            (x + radius).toInt(),
+            (y + 2 * radius).toInt(),
+            (x + width + radius).toInt(),
+            (y + height).toInt(),
+            color
+        )
+        context.fill(
+            (x + 2 * radius).toInt(),
+            (y + radius).toInt(),
+            (x + width).toInt(),
+            (y + 2 * radius).toInt(),
+            color
+        )
+        context.fill(
+            (x + 2 * radius).toInt(),
+            (y + height).toInt(),
+            (x + width).toInt(),
+            (y + height + radius).toInt(),
+            color
+        )
+
+        val alpha = ColorHelper.Argb.getAlpha(color) / 255.0f
+        val red = ColorHelper.Argb.getRed(color) / 255.0f
+        val green = ColorHelper.Argb.getGreen(color) / 255.0f
+        val blue = ColorHelper.Argb.getBlue(color) / 255.0f
+
+        val cx = x + radius
+        val cy = y + radius
+        val angles = doubleArrayOf(Math.PI * 3.5, Math.PI * 3.0, Math.PI * 2.5, 0.0)
+        val offsets = arrayOf(
+            floatArrayOf(radius, radius),
+            floatArrayOf(width - radius, radius),
+            floatArrayOf(width - radius, height - radius),
+            floatArrayOf(radius, height - radius)
+        )
+
+        val vertexconsumer: VertexConsumer = context.vertexConsumers.getBuffer(RenderLayer.getGui())
+        for (index in 0..3) {
+            val startAngle = angles[index]
+            val offset = offsets[index]
+            vertexconsumer.vertex((cx + offset[0]).toDouble(), (cy + offset[1]).toDouble(), 0.0)
+                .color(red, green, blue, alpha).next()
+            var angle = startAngle
+            while (angle <= startAngle + Math.PI / 2.0 + 0.01) {
+                vertexconsumer.vertex(cx - radius * cos(angle) + offset[0], cy + radius * sin(angle) + offset[1], 0.0)
+                    .color(red, green, blue, alpha).next()
+                angle += Math.PI / 2.0 * 0.01
+            }
+        }
+        context.draw()
     }
 
     fun renderTargetESPCircle(

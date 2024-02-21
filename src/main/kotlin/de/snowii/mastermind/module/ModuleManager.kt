@@ -8,6 +8,7 @@ import de.snowii.mastermind.module.modules.player.AutoArmor
 import de.snowii.mastermind.module.modules.player.ChestStealer
 import de.snowii.mastermind.module.modules.player.InvManager
 import de.snowii.mastermind.module.modules.render.Tracers
+import de.snowii.mastermind.module.modules.visual.ClickGUI
 import de.snowii.mastermind.module.modules.world.Scaffold
 
 
@@ -29,6 +30,9 @@ object ModuleManager {
 
         // RENDER
         registerModule(Tracers)
+
+        // VISUAL
+        registerModule(ClickGUI())
 
         // FUN
         registerModule(Derp)
