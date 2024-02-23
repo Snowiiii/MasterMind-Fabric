@@ -10,7 +10,7 @@ import de.snowii.mastermind.util.RenderUtil
 import de.snowii.mastermind.util.SmoothAnimator
 import net.minecraft.client.gui.DrawContext
 
-class ModuleSettingsPage(private val module: Module, x: Int, y: Int) {
+class ModuleSettingsPage(module: Module, x: Int, y: Int) {
     var x: Float = x.toFloat()
     var y: Float = y.toFloat()
     private val width = 100

@@ -91,7 +91,7 @@ object Scaffold : Module("Scaffold", "Makes you an professional bridger", Catego
     }
 
     private fun getRotation(): Float {
-        return RotationUtils.getRotationsToBlock(currentPos!!, 10F)[0]
+        return RotationUtils.getRotationsTo(currentPos!!.toCenterPos())[0]
     }
 
     private fun isBlockBad(block: Block): Boolean {

@@ -9,3 +9,7 @@ accessible field net/minecraft/client/MinecraftClient sessionService Lcom/mojang
 mutable field net/minecraft/client/MinecraftClient sessionService Lcom/mojang/authlib/minecraft/MinecraftSessionService;
 
 accessible method net/minecraft/client/MinecraftClient doAttack ()Z
+
+accessible field net/minecraft/client/network/ClientPlayerEntity lastYaw F
+accessible field net/minecraft/client/network/ClientPlayerEntity lastPitch F
+

@@ -36,6 +36,7 @@ object AutoArmor : Module("AutoArmor", "Manages your Armor", Category.PLAYER) {
             }
         })
         ScreenEvents.AFTER_INIT.register(ScreenEvents.AfterInit { client, screen, scaledWidth, scaledHeight ->
+            if (!this.isToggled) return@AfterInit
             run {
                 if (screen is InventoryScreen) {
                     ScreenEvents.afterTick(screen)

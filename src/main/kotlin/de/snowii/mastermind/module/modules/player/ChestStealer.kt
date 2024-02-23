@@ -19,6 +19,7 @@ object ChestStealer : Module("ChesttStealer", "Steals Cheast content", Category.
     init {
         toggle(true)
         ScreenEvents.AFTER_INIT.register(ScreenEvents.AfterInit { client, screen, scaledWidth, scaledHeight ->
+            if (!this.isToggled) return@AfterInit
             run {
                 if (screen is GenericContainerScreen) {
                     slots.clear()

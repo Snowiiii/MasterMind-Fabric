@@ -18,6 +18,7 @@ object InvManager : Module("InvManager", "Manages your Inventory", Category.PLAY
     init {
         toggle(true)
         ScreenEvents.AFTER_INIT.register(ScreenEvents.AfterInit { client, screen, scaledWidth, scaledHeight ->
+            if (!this.isToggled) return@AfterInit
             run {
                 if (screen is InventoryScreen) {
                     ScreenEvents.afterTick(screen)

@@ -37,7 +37,7 @@ object KillAura : Module("KillAura", "Attacks Entities nearby", Category.COMBAT)
 
     private val RAY_TRACE = SettingBoolean("RayTrace", true)
 
-    val ROTATION_SPEED: Float = 30F
+    val ROTATION_SPEED: Int = 30
 
     var hitTimer = TimeHelper()
     var rotations: FloatArray = FloatArray(2)
@@ -80,13 +80,13 @@ object KillAura : Module("KillAura", "Attacks Entities nearby", Category.COMBAT)
             run {
                 if (allowToAttack(entity)) {
                     rotations =
-                        RotationUtils.getRotationsToEntity(
-                            entity,
-                            ROTATION_SPEED
+                        RotationUtils.getRotationsTo(
+                            entity.pos
                         )
+                    rotations = RotationUtils.fixedSensitivity(rotations[0], rotations[1])
                     RotationUtils.setRotation(
-                        rotations[0] + MathHelper.nextFloat(random, 0.0F, entity.width / 2),
-                        rotations[1] + (0..1).random()
+                        rotations[0],
+                        rotations[1]
                     )
                 }
             }

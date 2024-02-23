@@ -19,20 +19,20 @@ class HUDScreen : HudRenderCallback {
         var count = 0
         for (module in ModuleManager.modules) {
             if (module.isToggled && module.renderModule()) {
-                val offset = (count * (mc.textRenderer.fontHeight + 5)).toDouble()
+                val offset = (count * (mc.textRenderer.fontHeight + 5))
                 //  if (module.openSlide < 6) module.openSlide++
                 drawContext.fill(
                     i - mc.textRenderer.getWidth(module.name) - 8,
-                    offset.toInt(),
+                    offset,
                     i,
-                    (mc.textRenderer.fontHeight + offset).toInt(),
+                    (mc.textRenderer.fontHeight + offset),
                     Color(0, 0, 0, 40).rgb
                 )
                 drawContext.drawText(
                     mc.textRenderer,
                     module.name,
                     (i - mc.textRenderer.getWidth(module.name) - 4),
-                    (2 + offset).toInt(),
+                    (2 + offset),
                     Color.WHITE.rgb,
                     false
                 )

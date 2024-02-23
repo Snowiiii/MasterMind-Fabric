@@ -1,14 +1,18 @@
 package de.snowii.mastermind.util
 
 import net.minecraft.client.MinecraftClient
-import net.minecraft.entity.Entity
-import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.MathHelper
-import kotlin.math.atan2
-import kotlin.math.hypot
+import net.minecraft.util.math.Vec3d
+import kotlin.math.*
 
 object RotationUtils {
     private val mc = MinecraftClient.getInstance()
+
+    val gcd: Double
+        get() {
+            val f = mc.options.mouseSensitivity.value * 0.6F.toDouble() + 0.2F.toDouble()
+            return f * f * f * 8.0 * 0.15F
+        }
 
     var camera_yaw: Float = 0.0F
     var camera_pitch: Float = 0.0F
@@ -26,33 +30,33 @@ object RotationUtils {
         player.pitch = current_pitch
     }
 
-    fun getRotationsToEntity(target: Entity, speed: Float): FloatArray {
+    fun getRotationsTo(vec: Vec3d): FloatArray {
         val player = mc.player!!
-        val d: Double = target.x - player.x
-        val e: Double = target.eyeY - player.eyeY
-        val f: Double = target.z - player.z
-        val d3 = hypot(d, f)
-        val yaw = MathHelper.wrapDegrees((MathHelper.atan2(f, d) * 57.2957763671875).toFloat() - 90.0f)
-        val pitch = MathHelper.wrapDegrees((-(MathHelper.atan2(e, d3) * 57.2957763671875)).toFloat())
-        return floatArrayOf(yaw, pitch)
+        val diffX = vec.x - player.x
+        val diffY = vec.y - player.eyeY
+        val diffZ = vec.z - player.z
+
+        return floatArrayOf(
+            MathHelper.wrapDegrees(Math.toDegrees(atan2(diffZ, diffX)).toFloat() - 90f),
+            MathHelper.wrapDegrees((-Math.toDegrees(atan2(diffY, sqrt(diffX * diffX + diffZ * diffZ)))).toFloat())
+        )
     }
 
-    fun getRotationsToBlock(pos: BlockPos, speed: Float): FloatArray {
+    fun fixedSensitivity(yaw: Float, pitch: Float): FloatArray {
         val player = mc.player!!
-        val d0 = pos.x - player.x
-        val d1 = pos.y - player.eyeY
-        val d2 = pos.z - player.z
-        val d3 = hypot(d0, d2)
-        val f = MathHelper.wrapDegrees(atan2(d2, d0)).toFloat() - 90f
-        val f1 = -MathHelper.wrapDegrees(atan2(d1, d3)).toFloat()
-        return floatArrayOf(updateRotation(player.yaw, f, speed), updateRotation(player.pitch, f1, speed))
-    }
 
-    fun limitAngleChange(current: Float, intended: Float): Float {
-        val currentWrapped = MathHelper.wrapDegrees(current)
-        val intendedWrapped = MathHelper.wrapDegrees(intended)
-        val change = MathHelper.wrapDegrees(intendedWrapped - currentWrapped)
-        return current + change
+        val deltaYaw = yaw - player.lastYaw
+        val deltaPitch = pitch - player.lastPitch
+
+        // proper rounding
+        val g1 = (deltaYaw / gcd).roundToInt() * gcd
+        val g2 = (deltaPitch / gcd).roundToInt() * gcd
+
+        // fix rotation
+        val yaw = player.lastYaw + g1.toFloat()
+        val pitch = player.lastPitch + g2.toFloat()
+
+        return floatArrayOf(yaw, pitch.coerceIn(-90f, 90f))
     }
 
     fun setRotation(yaw: Float, pitch: Float) {
