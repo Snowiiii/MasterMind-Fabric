@@ -52,11 +52,7 @@ object RotationUtils {
         val g1 = (deltaYaw / gcd).roundToInt() * gcd
         val g2 = (deltaPitch / gcd).roundToInt() * gcd
 
-        // fix rotation
-        val yaw = player.lastYaw + g1.toFloat()
-        val pitch = player.lastPitch + g2.toFloat()
-
-        return floatArrayOf(yaw, pitch.coerceIn(-90f, 90f))
+        return floatArrayOf(player.lastYaw + g1.toFloat(), player.lastPitch + g2.toFloat())
     }
 
     fun setRotation(yaw: Float, pitch: Float) {

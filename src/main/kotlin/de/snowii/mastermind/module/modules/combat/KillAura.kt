@@ -19,7 +19,6 @@ import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.util.Hand
 import net.minecraft.util.hit.EntityHitResult
 import net.minecraft.util.hit.HitResult
-import net.minecraft.util.math.MathHelper
 import net.minecraft.util.math.random.Random
 import org.lwjgl.glfw.GLFW
 
@@ -36,6 +35,7 @@ object KillAura : Module("KillAura", "Attacks Entities nearby", Category.COMBAT)
     private val TARGET_VILLAGER = SettingBoolean("Villager", true)
 
     private val RAY_TRACE = SettingBoolean("RayTrace", true)
+    private val NEW_PVP = SettingBoolean("New PVP", true)
 
     val ROTATION_SPEED: Int = 30
 
@@ -72,6 +72,7 @@ object KillAura : Module("KillAura", "Attacks Entities nearby", Category.COMBAT)
         addSetting(TARGET_PLAYERS)
         addSetting(TARGET_VILLAGER)
         addSetting(RAY_TRACE)
+        addSetting(NEW_PVP)
     }
 
     override fun onPreUpdate() {
@@ -136,6 +137,7 @@ object KillAura : Module("KillAura", "Attacks Entities nearby", Category.COMBAT)
 
     private fun attackEntity(entity: Entity) {
         if (!mc.player!!.isUsingItem && hitTimer.hasTimeReached((1000 / current_cps).toLong())) {
+           if (NEW_PVP.value && mc.player!!.getAttackCooldownProgress(1.0F) < 1.0F) return
             if (RAY_TRACE.value) {
                 mc.doAttack()
             } else {
