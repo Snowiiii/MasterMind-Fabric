@@ -2,7 +2,6 @@ package de.snowii.mastermind.module.modules.world
 
 import de.snowii.mastermind.module.Module
 import de.snowii.mastermind.settings.SettingBoolean
-import de.snowii.mastermind.settings.SettingFloat
 import de.snowii.mastermind.util.RotationUtils
 import de.snowii.mastermind.util.TimeHelper
 import net.minecraft.block.Block
@@ -16,9 +15,9 @@ import net.minecraft.util.math.Direction
 import org.lwjgl.glfw.GLFW
 
 object Scaffold : Module("Scaffold", "Makes you an professional bridger", Category.WORLD) {
-    private val SILENT = SettingBoolean("Silent Switch", true)
-    private val SENSITIVITY_ROTATION = SettingBoolean("Sensitivity Rotation", true)
-    private val ROTATION_SPEED = SettingFloat("Rotation Speed", 50f, 10f, 100f) { SENSITIVITY_ROTATION.value }
+    private val BLOCK_SWITCH = SettingBoolean("Block Switch", true)
+    private val ROTATION = SettingBoolean("Rotation", true)
+
     private var currentPos: BlockPos? = null
     private var currentFacing: Direction? = null
     private val lookTime = TimeHelper()
@@ -26,10 +25,14 @@ object Scaffold : Module("Scaffold", "Makes you an professional bridger", Catego
     private var shouldPlace = false
     private var oldSlot = 0
 
+    private var current_rot: Float? = null
+
     val HAND: Hand = Hand.MAIN_HAND
 
     init {
         key(GLFW.GLFW_KEY_V)
+        addSetting(BLOCK_SWITCH)
+        addSetting(ROTATION)
     }
 
     override fun onPreUpdate() {
@@ -41,22 +44,26 @@ object Scaffold : Module("Scaffold", "Makes you an professional bridger", Catego
                 shouldLook = true
             }
         }
-        if (shouldLook && currentPos != null) {
+
+        if (currentPos != null) {
             mc.player!!.isSprinting = false
-            val speed = ROTATION_SPEED.value
-            val pitch = 80.0f // god bridge
-            val yaw = getRotation()
-            RotationUtils.setRotation(
-                RotationUtils.updateRotation(mc.player!!.yaw, yaw, speed),
-                RotationUtils.updateRotation(mc.player!!.pitch, pitch, speed)
-            )
-            if (currentPos != null) {
-                shouldPlace = true
-            }
+            current_rot = getRotation()
+            shouldPlace = true
         }
+
+        if (ROTATION.value && shouldLook && current_rot != null) {
+            mc.player!!.isSprinting = false
+            val pitch = 80.0f // god bridge
+            RotationUtils.setRotation(
+                current_rot!!,
+                pitch
+            )
+        }
+
         if (shouldLook && lookTime.hasTimeReached(1000)) {
-            if (!SILENT.value) mc.player!!.inventory.selectedSlot = oldSlot
+            if (!BLOCK_SWITCH.value) mc.player!!.inventory.selectedSlot = oldSlot
             shouldLook = false
+            current_rot = null
             lookTime.reset()
             // mc.player.moveCamera = false
         }
@@ -70,7 +77,7 @@ object Scaffold : Module("Scaffold", "Makes you an professional bridger", Catego
             } else if (isBlockBad((stack.item as BlockItem).block)) if (!searchAndSelectBlock()) return
             // mc.player.moveCamera = true
             placeBlock()
-            if (SILENT.value) mc.player!!.inventory.selectedSlot = oldSlot
+            if (BLOCK_SWITCH.value) mc.player!!.inventory.selectedSlot = oldSlot
             shouldPlace = false
             lookTime.reset()
             currentPos = null

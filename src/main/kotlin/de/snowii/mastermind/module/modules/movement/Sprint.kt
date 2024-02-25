@@ -10,8 +10,4 @@ object Sprint : Module("Sprint", "Enables Auto Sprinting", Category.MOVEMENT) {
         instance = this
     }
 
-    override fun onPreUpdate() {
-        if (mc.player!!.forwardSpeed > 0) mc.player!!.isSprinting = true
-    }
-
 }

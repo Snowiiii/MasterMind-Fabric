@@ -1,5 +1,6 @@
 package de.snowii.mastermind.mixin.client.entity
 
+import com.llamalad7.mixinextras.injector.ModifyReturnValue
 import de.snowii.mastermind.util.RotationUtils
 import net.minecraft.entity.Entity
 import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket
@@ -7,6 +8,7 @@ import net.minecraft.util.math.MathHelper
 import org.spongepowered.asm.mixin.Mixin
 import org.spongepowered.asm.mixin.injection.At
 import org.spongepowered.asm.mixin.injection.Inject
+import org.spongepowered.asm.mixin.injection.ModifyArg
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo
 
 @Mixin(Entity::class)
@@ -39,6 +41,7 @@ class MixinEntity {
         RotationUtils.prev_camera_yaw = RotationUtils.camera_yaw
         RotationUtils.prev_camera_pitch = RotationUtils.camera_yaw
     }
+
 
 
     @Inject(

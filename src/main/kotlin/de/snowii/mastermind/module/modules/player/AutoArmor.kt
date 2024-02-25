@@ -18,7 +18,7 @@ object AutoArmor : Module("AutoArmor", "Manages your Armor", Category.PLAYER) {
     private val DELAY_MIN = SettingInt("Delay Min", 1, 0, 10) // 10 = 1 sec
     private val DELAY_MAX = SettingInt("Delay Max", 2, 0, 10) // 10 = 1 sec
 
-    private var delay = 0
+    private var delay = (DELAY_MIN.value..DELAY_MAX.value).random()
 
     init {
         toggle(true)
@@ -42,7 +42,6 @@ object AutoArmor : Module("AutoArmor", "Manages your Armor", Category.PLAYER) {
                     ScreenEvents.afterTick(screen)
                         .register(ScreenEvents.AfterTick { screen ->
                             run {
-                                if (delay <= 0) delay = (DELAY_MIN.value..DELAY_MAX.value).random()
                                 if (timeHelper.hasTimeReached(100L * delay)) {
                                     val bestArmorSlots = IntArray(4) { -1 }
                                     val bestArmorValues = IntArray(4)
@@ -71,9 +70,6 @@ object AutoArmor : Module("AutoArmor", "Manages your Armor", Category.PLAYER) {
                                         val slot = bestArmorSlots[type]
                                         if (slot == -1) continue
 
-                                        val oldArmor = mc.player!!.inventory.getArmorStack(type)
-                                        if (oldArmor == null) continue
-
                                         val adjustedSlot =
                                             if (slot < PlayerInventory.getHotbarSize()) slot + PlayerInventory.MAIN_SIZE else slot
 
@@ -93,7 +89,7 @@ object AutoArmor : Module("AutoArmor", "Manages your Armor", Category.PLAYER) {
                                         )
                                         break
                                     }
-                                    delay = 0
+                                    delay = (DELAY_MIN.value..DELAY_MAX.value).random()
                                     timeHelper.reset()
                                 }
                             }

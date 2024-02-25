@@ -8,4 +8,3 @@
 
 **A Modern Minecraft hacked client using Fabric**
 
-### Current Status: in development

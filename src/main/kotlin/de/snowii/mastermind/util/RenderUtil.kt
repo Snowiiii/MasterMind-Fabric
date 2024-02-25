@@ -127,11 +127,11 @@ object RenderUtil {
         speed: Float
     ) {
         val lineSpacing = 0.03
-        val CENTER = (entity.width / 2).toDouble()
+        val CENTER = (entity.width / 2)
         val bRadius = 1.5 / entity.width
-        val boxHeight = entity.height.toDouble()
-        val lineSmoothness = 0.2
-        val currentY = sin(Util.getMeasuringTimeMs().toDouble() / (150 - speed)) / 1.4 - 0.8
+        val boxHeight = entity.height
+        val lineSmoothness = 0.2F
+        val currentY = sin(Util.getMeasuringTimeMs() / (150 - speed)) / 1.4 - 0.8
         val aa = entity.boundingBox
         val camera = context.camera().pos
         val vertexConsumer: VertexConsumer =
