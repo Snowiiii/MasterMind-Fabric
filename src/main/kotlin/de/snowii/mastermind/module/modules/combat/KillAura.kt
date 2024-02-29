@@ -1,6 +1,7 @@
 package de.snowii.mastermind.module.modules.combat
 
 import de.snowii.mastermind.module.Module
+import de.snowii.mastermind.module.modules.player.MidClick
 import de.snowii.mastermind.settings.SettingBoolean
 import de.snowii.mastermind.settings.SettingFloat
 import de.snowii.mastermind.settings.SettingInt
@@ -126,7 +127,7 @@ object KillAura : Module("KillAura", "Attacks Entities nearby", Category.COMBAT)
         ) {
             when (entity) {
                 is PlayerEntity -> {
-                    return TARGET_PLAYERS.value // TODO Mid click
+                    return TARGET_PLAYERS.value && !MidClick.friends.contains(entity.uuid)
                 }
 
                 is Monster -> {

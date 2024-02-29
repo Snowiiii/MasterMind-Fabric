@@ -27,7 +27,6 @@ object CommandManager {
      */
     private fun parseMessage(message: String): Boolean {
         if (message.startsWith(PREFIX)) {
-            println("a")
             val text = message.removePrefix(PREFIX).split(" ".toRegex())
                 .toTypedArray()
             for (command in commands) {

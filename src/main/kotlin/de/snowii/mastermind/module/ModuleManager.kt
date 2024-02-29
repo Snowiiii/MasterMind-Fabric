@@ -7,6 +7,7 @@ import de.snowii.mastermind.module.modules.movement.Sprint
 import de.snowii.mastermind.module.modules.player.AutoArmor
 import de.snowii.mastermind.module.modules.player.ChestStealer
 import de.snowii.mastermind.module.modules.player.InvManager
+import de.snowii.mastermind.module.modules.player.MidClick
 import de.snowii.mastermind.module.modules.render.ESP
 import de.snowii.mastermind.module.modules.render.Tracers
 import de.snowii.mastermind.module.modules.visual.ClickGUI
@@ -23,6 +24,7 @@ object ModuleManager {
 
         // PLAYER
         registerModule(AutoArmor)
+        registerModule(MidClick)
         registerModule(ChestStealer)
         registerModule(InvManager)
 
