@@ -28,21 +28,6 @@ class MixinMinecraftClient {
     fun handleInputEvents(ci: CallbackInfo) {
         ModuleManager.modules.forEach { module: Module -> if (module.isToggled) module.onKeyboardTick() }
     }
-
-    @Inject(
-        method = ["tick()V"],
-        at = [At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/client/world/ClientWorld;tickEntities",
-            shift = At.Shift.AFTER
-
-        )],
-    )
-    fun onPostTick(ci: CallbackInfo) {
-        player!!.yaw = saved_yaw
-        player!!.pitch = saved_pitch
-    }
-
     @Inject(
         method = ["tick()V"],
         at = [At(
@@ -62,6 +47,21 @@ class MixinMinecraftClient {
             }
         }
     }
+
+    @Inject(
+        method = ["tick()V"],
+        at = [At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/client/world/ClientWorld;tick",
+            shift = At.Shift.AFTER
+
+        )],
+    )
+    fun onPostTick(ci: CallbackInfo) {
+        player!!.yaw = saved_yaw
+        player!!.pitch = saved_pitch
+    }
+
 
 
 }

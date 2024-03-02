@@ -30,9 +30,9 @@ object KillAura : Module("KillAura", "Attacks Entities nearby", Category.COMBAT)
     private val RANGE = SettingFloat("Range", 3.3f, 3.0F, 8.0f)
 
     private val TARGET_PLAYERS = SettingBoolean("Players", true)
-    private val TARGET_ANIMAL = SettingBoolean("Animals", true)
-    private val TARGET_MOBS = SettingBoolean("Mobs", true)
-    private val TARGET_VILLAGER = SettingBoolean("Villager", true)
+    private val TARGET_ANIMAL = SettingBoolean("Animals", false)
+    private val TARGET_MOBS = SettingBoolean("Mobs", false)
+    private val TARGET_VILLAGER = SettingBoolean("Villager", false)
 
     private val ROTATION = SettingBoolean("Rotation", true)
     private val PRE_AIM = SettingBoolean("Pre Aim", true) { ROTATION.value }
@@ -197,6 +197,7 @@ object KillAura : Module("KillAura", "Attacks Entities nearby", Category.COMBAT)
     private fun attackEntity(entity: Entity) {
         if (!mc.player!!.isUsingItem && hitTimer.hasTimeReached((1000 / current_cps).toLong())) {
             if (NEW_PVP.value && mc.player!!.getAttackCooldownProgress(1.0F) < 1.0F) return
+            // keep in mind that when attacking, Velocity packets will be send, calculated using yaw & pitch
             if (RAY_TRACE.value) {
                 mc.doAttack()
             } else {

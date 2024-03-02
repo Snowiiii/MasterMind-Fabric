@@ -33,7 +33,7 @@ object RotationUtils {
     fun getRotationsTo(vec: Vec3d): FloatArray {
         val player = mc.player!!
         val diffX = vec.x - player.x
-        val diffY = vec.y - player.eyeY
+        val diffY = vec.y - player.y
         val diffZ = vec.z - player.z
 
         return floatArrayOf(
