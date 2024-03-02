@@ -37,9 +37,19 @@ object KillAura : Module("KillAura", "Attacks Entities nearby", Category.COMBAT)
     private val ROTATION = SettingBoolean("Rotation", true)
     private val PRE_AIM = SettingBoolean("Pre Aim", true) { ROTATION.value }
     private val PRE_AIM_RANGE =
-        SettingFloat("Pre Aim Range", RANGE.value + 1, RANGE.value, RANGE.max + 1) { PRE_AIM.value }
+        SettingFloat("Pre Aim Range", 1.5F, 0.5F, 4.0F) { PRE_AIM.value }
     private val RAY_TRACE = SettingBoolean("RayTrace", true)
     private val NEW_PVP = SettingBoolean("New PVP", true)
+
+    private val RED = SettingFloat("ESP Red", 1f, 0f, 1f)
+    private val GREEN = SettingFloat("ESP Green", 0.5f, 0f, 1f)
+    private val BLUE = SettingFloat("ESP Blue", 0f, 0f, 1f)
+    private val ALPHA = SettingFloat("ESP Alpha", 1f, 0.1f, 1f)
+    private val PRE_RED = SettingFloat("Pre Aim Red", 1f, 0f, 1f)
+    private val PRE_GREEN = SettingFloat("Pre Aim Green", 0.3f, 0f, 1f)
+    private val PRE_BLUE = SettingFloat("Pre Aim Blue", 0f, 0f, 1f)
+    private val PRE_ALPHA = SettingFloat("Pre Aim Alpha", 1f, 0.1f, 1f)
+    private val WIDTH = SettingFloat("ESP Width", 3f, 0.1f, 4f)
 
     var hitTimer = TimeHelper()
     var rotations: FloatArray = FloatArray(2)
@@ -67,7 +77,31 @@ object KillAura : Module("KillAura", "Attacks Entities nearby", Category.COMBAT)
                 run {
                     targets!!.forEach { entity: Entity ->
                         run {
-                            RenderUtil.renderTargetESPCircle(context, entity, 1.0f, 1.0f, 0.0f, 1.0f, 2, 3F, 1F)
+                            if (PRE_AIM.value && mc.player!!.distanceTo(entity) > RANGE.value) {
+                                RenderUtil.renderTargetESPCircle(
+                                    context,
+                                    entity,
+                                    PRE_RED.value,
+                                    PRE_RED.value,
+                                    PRE_RED.value,
+                                    PRE_RED.value,
+                                    2,
+                                    WIDTH.value,
+                                    1F
+                                )
+                            } else {
+                                RenderUtil.renderTargetESPCircle(
+                                    context,
+                                    entity,
+                                    RED.value,
+                                    GREEN.value,
+                                    BLUE.value,
+                                    ALPHA.value,
+                                    2,
+                                    WIDTH.value,
+                                    1F
+                                )
+                            }
                         }
                     }
                 }
@@ -84,6 +118,17 @@ object KillAura : Module("KillAura", "Attacks Entities nearby", Category.COMBAT)
         addSetting(PRE_AIM)
         addSetting(PRE_AIM_RANGE)
         addSetting(NEW_PVP)
+
+        // ESP
+        addSetting(RED)
+        addSetting(GREEN)
+        addSetting(BLUE)
+        addSetting(ALPHA)
+        addSetting(PRE_RED)
+        addSetting(PRE_GREEN)
+        addSetting(PRE_BLUE)
+        addSetting(PRE_ALPHA)
+        addSetting(WIDTH)
     }
 
     override fun onPreUpdate() {
@@ -108,6 +153,8 @@ object KillAura : Module("KillAura", "Attacks Entities nearby", Category.COMBAT)
     override fun onKeyboardTick() {
         if (targets == null) return
         targets!!.forEach { entity: Entity ->
+            // Don't Attack when just Pre Aiming
+            if (PRE_AIM.value && mc.player!!.distanceTo(entity) > RANGE.value) return
             if (RAY_TRACE.value) {
                 RotationUtils.rayTrace(rotations[0], rotations[1])
                 if (mc.crosshairTarget != null && mc.crosshairTarget!!.type == HitResult.Type.ENTITY) {
@@ -120,7 +167,7 @@ object KillAura : Module("KillAura", "Attacks Entities nearby", Category.COMBAT)
     }
 
     private fun allowToAttack(entity: Entity): Boolean {
-        val RANGE = if (PRE_AIM.value) PRE_AIM_RANGE.value else RANGE.value
+        val RANGE = if (PRE_AIM.value) RANGE.value + PRE_AIM_RANGE.value else RANGE.value
         return if (entity is LivingEntity && entity !== mc.player && mc.player!!.distanceTo(
                 entity
             ) <= RANGE && mc.player!!.canTarget(entity) && entity.isAttackable
@@ -148,8 +195,6 @@ object KillAura : Module("KillAura", "Attacks Entities nearby", Category.COMBAT)
     }
 
     private fun attackEntity(entity: Entity) {
-        // Don't Attack when just Pre Aiming
-        if (PRE_AIM.value && mc.player!!.distanceTo(entity) > RANGE.value) return
         if (!mc.player!!.isUsingItem && hitTimer.hasTimeReached((1000 / current_cps).toLong())) {
             if (NEW_PVP.value && mc.player!!.getAttackCooldownProgress(1.0F) < 1.0F) return
             if (RAY_TRACE.value) {
