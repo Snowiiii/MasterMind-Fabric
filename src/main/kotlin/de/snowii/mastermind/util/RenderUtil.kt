@@ -9,6 +9,7 @@ import net.minecraft.client.util.math.MatrixStack
 import net.minecraft.entity.Entity
 import net.minecraft.util.Util
 import net.minecraft.util.math.ColorHelper
+import net.minecraft.util.math.Vec3d
 import org.joml.Matrix4f
 import kotlin.math.cos
 import kotlin.math.sin
@@ -17,7 +18,7 @@ import kotlin.math.sin
 object RenderUtil {
 
     fun draw2DLine(
-        context: DrawContext,
+        context: WorldRenderContext,
         xPar: Double,
         yPar: Double,
         zPar: Double,
@@ -27,25 +28,31 @@ object RenderUtil {
         alpha: Float,
         lineWdith: Float
     ) {
-        val camera = MinecraftClient.getInstance().gameRenderer.camera.pos.negate()
-        val matrix4f: Matrix4f = context.matrices.peek().positionMatrix
+        val mc = MinecraftClient.getInstance()
+        val camera = context.camera()
+        val center = Vec3d(0.0, 0.0, 1.0)
+            .rotateX(-Math.toRadians(camera.pitch.toDouble()).toFloat())
+            .rotateY(-Math.toRadians(camera.yaw.toDouble()).toFloat())
+            .add(camera.pos)
+
+        val matrix = context.matrixStack();
+        val matrix4f: Matrix4f = matrix.peek().positionMatrix
 
         RenderSystem.enableBlend()
-        RenderSystem.lineWidth(lineWdith)
-        RenderSystem.setShader { GameRenderer.getPositionColorProgram() }
+        val vertexConsumer: VertexConsumer =
+            context.consumers()!!.getBuffer(RenderLayer.getDebugLineStrip(lineWdith.toDouble()))
         RenderSystem.defaultBlendFunc()
-        val bufferBuilder = Tessellator.getInstance().buffer
-        bufferBuilder.begin(VertexFormat.DrawMode.LINE_STRIP, VertexFormats.POSITION_COLOR)
-        bufferBuilder.vertex(matrix4f, 0.0F, MinecraftClient.getInstance().player!!.standingEyeHeight, 0.0F)
+        matrix.push()
+        vertexConsumer.vertex(matrix4f, center.x.toFloat(), center.y.toFloat(), center.z.toFloat())
             .color(red, green, blue, alpha).next()
-        bufferBuilder.vertex(
+        vertexConsumer.vertex(
             matrix4f,
-            (xPar - camera.x).toFloat(),
-            (yPar - camera.y).toFloat(),
-            (zPar - camera.z).toFloat()
+            (xPar - center.x).toFloat(),
+            (yPar - center.y).toFloat(),
+            (zPar - center.z).toFloat()
         ).color(red, green, blue, alpha)
             .next()
-        BufferRenderer.drawWithGlobalProgram(bufferBuilder.end())
+        matrix.pop()
         RenderSystem.disableBlend()
     }
 
@@ -134,8 +141,8 @@ object RenderUtil {
         val currentY = sin(Util.getMeasuringTimeMs() / (150 - speed)) / 1.4 - 0.8
         val aa = entity.boundingBox
         val camera = context.camera().pos
-        val vertexConsumer: VertexConsumer =
-            context.consumers()!!.getBuffer(RenderLayer.getDebugLineStrip(width.toDouble()))
+        val tessellator = Tessellator.getInstance()
+        val bufferBuilder = tessellator.buffer
         val xx = aa.maxX - camera.x
         val yy = aa.maxY - camera.y
         val zz = aa.maxZ - camera.z
@@ -143,8 +150,11 @@ object RenderUtil {
 
         var currentLineY: Double
 
+        // We dont use vertex consumers so we can disable depth
+        RenderSystem.setShader { GameRenderer.getPositionColorProgram() }
         RenderSystem.depthMask(false)
         RenderSystem.defaultBlendFunc()
+        RenderSystem.lineWidth(width)
         RenderSystem.disableDepthTest()
         RenderSystem.enableBlend()
 
@@ -155,24 +165,26 @@ object RenderUtil {
             currentLineY = line * lineSpacing
             var i = -boxHeight
             while (i <= boxHeight + 1f) {
-                vertexConsumer.vertex(
+                bufferBuilder.begin(VertexFormat.DrawMode.DEBUG_LINE_STRIP, VertexFormats.POSITION_COLOR)
+                bufferBuilder.vertex(
                     matrix4f,
                     (xx - CENTER + sin((i - lineSmoothness) * 2) / bRadius).toFloat(),
                     (yy + currentY + currentLineY).toFloat(),
                     (zz - CENTER + cos((i - lineSmoothness) * 2) / bRadius).toFloat()
                 ).color(red, green, blue, alpha).next()
-                vertexConsumer.vertex(
+                bufferBuilder.vertex(
                     matrix4f,
                     (xx - CENTER + sin((i - lineSmoothness / 2) * 2) / bRadius).toFloat(),
                     (yy + currentY + currentLineY).toFloat(),
                     (zz - CENTER + cos((i - lineSmoothness / 2) * 2) / bRadius).toFloat()
                 ).color(red, green, blue, alpha).next()
-                vertexConsumer.vertex(
+                bufferBuilder.vertex(
                     matrix4f,
                     (xx - CENTER + sin(i * 2) / bRadius).toFloat(), (yy + currentY + currentLineY).toFloat(),
                     (zz - CENTER + cos(i * 2) / bRadius).toFloat()
                 ).color(red, green, blue, alpha).next()
                 i += lineSmoothness
+                tessellator.draw()
             }
             matrices.pop()
         }

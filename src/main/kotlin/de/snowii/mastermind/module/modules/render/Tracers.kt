@@ -4,15 +4,16 @@ import de.snowii.mastermind.module.Module
 import de.snowii.mastermind.settings.SettingBoolean
 import de.snowii.mastermind.settings.SettingFloat
 import de.snowii.mastermind.util.RenderUtil
-import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback
-import net.minecraft.client.gui.DrawContext
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents
+import net.minecraft.entity.Entity
 import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.mob.Monster
 import net.minecraft.entity.passive.AnimalEntity
 import net.minecraft.entity.passive.VillagerEntity
 import net.minecraft.entity.player.PlayerEntity
 
-object Tracers : Module("Tracers", "Displays 2D lines to Targets", Category.RENDER), HudRenderCallback {
+object Tracers : Module("Tracers", "Displays 2D lines to Targets", Category.RENDER) {
     private val RED = SettingFloat("Red", 1f, 0f, 1f)
     private val GREEN = SettingFloat("Green", 0.5f, 0f, 1f)
     private val BLUE = SettingFloat("Blue", 0f, 0f, 1f)
@@ -33,29 +34,34 @@ object Tracers : Module("Tracers", "Displays 2D lines to Targets", Category.REND
         addSetting(BLUE)
         addSetting(ALPHA)
         addSetting(WIDTH)
-        HudRenderCallback.EVENT.register(this)
+        WorldRenderEvents.BEFORE_DEBUG_RENDER.register(WorldRenderEvents.DebugRender { context: WorldRenderContext ->
+            if (this.isToggled)
+                for (entity in mc.world!!.entities) {
+                    if (allowToESP(entity)) {
+                        RenderUtil.draw2DLine(
+                            context,
+                            entity.x,
+                            entity.eyeY,
+                            entity.z,
+                            RED.value,
+                            GREEN.value,
+                            BLUE.value,
+                            ALPHA.value,
+                            WIDTH.value
+                        )
+                    }
+                }
+        })
     }
 
-    override fun onHudRender(drawContext: DrawContext, tickDelta: Float) {
-        for (entity in mc.world!!.entities) {
-            if (allowToESP(entity)) {
-                RenderUtil.draw2DLine(
-                    drawContext,
-                    entity.x,
-                    entity.eyeY,
-                    entity.z,
-                    RED.value,
-                    GREEN.value,
-                    BLUE.value,
-                    ALPHA.value,
-                    WIDTH.value
-                )
-            }
-        }
-    }
 
-    private fun allowToESP(entity: net.minecraft.entity.Entity): Boolean {
-        return if (entity is LivingEntity && entity !== mc.player && entity.isAlive
+    private fun allowToESP(entity: Entity): Boolean {
+        val cam = mc.gameRenderer.camera.pos
+        return if (entity is LivingEntity && entity !== mc.player && entity.shouldRender(
+                cam.x,
+                cam.y,
+                cam.z
+            ) && entity.isAlive
         ) {
             when (entity) {
                 is PlayerEntity -> {
