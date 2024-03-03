@@ -1,34 +1,34 @@
 package de.snowii.mastermind.command.commands
 
-import de.snowii.mastermind.command.Command
-import de.snowii.mastermind.module.ModuleManager
+import com.mojang.brigadier.Command
+import com.mojang.brigadier.context.CommandContext
+import de.snowii.mastermind.command.argument.KeyBoardArgumentType
+import de.snowii.mastermind.command.argument.ModuleArgumentType
+import de.snowii.mastermind.module.Module
 import de.snowii.mastermind.util.PlayerUtil
-import net.minecraft.client.util.InputUtil
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager
+import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
+import net.minecraft.client.util.InputUtil.Key
 import net.minecraft.util.Formatting
-import java.util.*
 
-class BindCommand : Command("Bind", "Binds a module to a key", "b") {
-    override fun onCommand(args: Array<String>) {
-        if (args.size >= 3) {
-            for (module in ModuleManager.modules) {
-                if (module.name.equals(args[1], ignoreCase = true)) {
-                    try {
-                        val key =
-                            InputUtil.fromTranslationKey("key.keyboard." + args[2].lowercase(Locale.getDefault()))
+class BindCommand {
+    val COMMAND =
+        ClientCommandManager.literal("bind").then(ClientCommandManager.argument("module", ModuleArgumentType()))
+            .then(
+                ClientCommandManager.argument("key", KeyBoardArgumentType()).executes { context ->
+                    run(
+                        context,
+                        ModuleArgumentType.getModule(context, "module"),
+                        KeyBoardArgumentType.getKey(context, "key")
+                    )
+                })
 
-                        module.key = key
-                        PlayerUtil.sendMessage(
-                            Formatting.GREEN.toString() + "Bound " + module.name + " to " + args[2].uppercase(
-                                Locale.getDefault()
-                            )
-                        )
-                    } catch (e: Exception) {
-                        PlayerUtil.sendMessage(Formatting.RED.toString() + "Invalid Key")
-                    }
-                    return
-                }
-            }
-            PlayerUtil.sendMessage("Unknown Module: " + args[1])
-        } else PlayerUtil.sendMessage(".b <module> <key>")
+    fun run(context: CommandContext<FabricClientCommandSource>, module: Module, key: Key): Int {
+        module.key = key
+        PlayerUtil.sendMessage(
+            context.source,
+            Formatting.GREEN.toString() + "Bound " + module.name + " to " + key.localizedText
+        )
+        return Command.SINGLE_SUCCESS
     }
 }

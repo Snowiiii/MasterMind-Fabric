@@ -1,12 +1,6 @@
 package de.snowii.mastermind.command.commands
 
-import de.snowii.mastermind.command.Command
-import de.snowii.mastermind.module.ModuleManager
-import de.snowii.mastermind.settings.*
-import de.snowii.mastermind.util.PlayerUtil
-import net.minecraft.util.Formatting
-
-class SettingCommand : Command("Setting", "Sets Module setting", "s", "config", "val") {
+/*class SettingCommand : Command("Setting", "Sets Module setting", "s", "config", "val") {
     override fun onCommand(args: Array<String>) {
         if (args.size >= 4) {
             for (module in ModuleManager.modules) {
@@ -81,4 +75,4 @@ class SettingCommand : Command("Setting", "Sets Module setting", "s", "config", 
             PlayerUtil.sendMessage("Unknown Module: " + args[1])
         } else PlayerUtil.sendMessage(".s <module> <setting> <value>")
     }
-}
+}*/

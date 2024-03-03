@@ -45,10 +45,16 @@ object ModuleManager {
         registerModule(Scaffold)
     }
 
-
     private fun registerModule(module: Module) {
         // Register Settings
         modules.add(module)
+    }
+
+    public fun findModuleByName(name: String) : Module? {
+        for (module in modules) {
+            if (module.name.equals(name, ignoreCase = true)) return module
+        }
+        return null
     }
 
 

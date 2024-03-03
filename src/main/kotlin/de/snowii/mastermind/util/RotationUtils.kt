@@ -3,7 +3,9 @@ package de.snowii.mastermind.util
 import net.minecraft.client.MinecraftClient
 import net.minecraft.util.math.MathHelper
 import net.minecraft.util.math.Vec3d
-import kotlin.math.*
+import kotlin.math.atan2
+import kotlin.math.roundToInt
+import kotlin.math.sqrt
 
 object RotationUtils {
     private val mc = MinecraftClient.getInstance()
