@@ -5,8 +5,10 @@ import de.snowii.mastermind.settings.SettingBoolean
 import de.snowii.mastermind.util.RotationUtils
 import de.snowii.mastermind.util.TimeHelper
 import net.minecraft.block.Block
+import net.minecraft.block.ChestBlock
 import net.minecraft.block.FallingBlock
 import net.minecraft.item.BlockItem
+import net.minecraft.item.ItemStack
 import net.minecraft.util.ActionResult
 import net.minecraft.util.Hand
 import net.minecraft.util.hit.BlockHitResult
@@ -26,8 +28,6 @@ object Scaffold : Module("Scaffold", "Makes you an professional bridger", Catego
     private var oldSlot = 0
 
     private var current_rot: Float? = null
-
-    val HAND: Hand = Hand.MAIN_HAND
 
     init {
         key(GLFW.GLFW_KEY_V)
@@ -71,10 +71,11 @@ object Scaffold : Module("Scaffold", "Makes you an professional bridger", Catego
 
     override fun onKeyboardTick() {
         if (currentPos != null && currentFacing != null && shouldPlace) {
-            val stack = mc.player!!.getStackInHand(Hand.MAIN_HAND)
-            if (stack == null || stack.item !is BlockItem) {
+            val stack_main = mc.player!!.getStackInHand(Hand.MAIN_HAND)
+            val stack_off = mc.player!!.getStackInHand(Hand.OFF_HAND)
+            if ((stack_main.isEmpty || stack_main.item !is BlockItem) && (stack_off.isEmpty || stack_off.item !is BlockItem)) {
                 if (!searchAndSelectBlock()) return
-            } else if (isBlockBad((stack.item as BlockItem).block)) if (!searchAndSelectBlock()) return
+            } else if (isBlockBad((stack_main.item as BlockItem).block) && isBlockBad((stack_off.item as BlockItem).block)) if (!searchAndSelectBlock()) return
             // mc.player.moveCamera = true
             placeBlock()
             if (BLOCK_SWITCH.value) mc.player!!.inventory.selectedSlot = oldSlot
@@ -132,21 +133,32 @@ object Scaffold : Module("Scaffold", "Makes you an professional bridger", Catego
     }
 
     private fun placeBlock() {
-        val from = mc.player!!.pos
-        val d: Double = currentPos!!.x - from.x
-        val e: Double = currentPos!!.y - from.y
-        val f: Double = currentPos!!.z - from.z
+        val player = mc.player!!
+        if (!player.isUsingItem) {
+            val from = player.pos
+            val d: Double = currentPos!!.x - from.x
+            val e: Double = currentPos!!.y - from.y
+            val f: Double = currentPos!!.z - from.z
+            for (hand in Hand.entries) {
+                val itemStack: ItemStack = player.getStackInHand(hand)
+                if (!itemStack.isItemEnabled(mc.world!!.enabledFeatures)) {
+                    return
+                }
+                val i = itemStack.count
+                val actionResult2: ActionResult = mc.interactionManager!!.interactBlock(
+                    player, hand,
+                    BlockHitResult(from.add(d, e, f), currentFacing, currentPos, false)
+                )
+                if (actionResult2.isAccepted) {
+                    if (actionResult2.shouldSwingHand()) {
+                        player.swingHand(hand)
+                        if (!itemStack.isEmpty && (itemStack.count != i || mc.interactionManager!!.hasCreativeInventory())) {
+                            mc.gameRenderer.firstPersonRenderer.resetEquipProgress(hand)
+                        }
+                    }
 
-        val actionResult2: ActionResult = mc.interactionManager!!.interactBlock(
-            mc.player, HAND,
-            BlockHitResult(from.add(d, e, f), currentFacing, currentPos, false)
-        )
-        if (actionResult2.isAccepted) {
-            if (actionResult2.shouldSwingHand()) {
-                mc.player!!.swingHand(HAND)
-                mc.gameRenderer.firstPersonRenderer.resetEquipProgress(HAND)
+                }
             }
-
         }
     }
 }
