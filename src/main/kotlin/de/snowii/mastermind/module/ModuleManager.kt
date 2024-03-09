@@ -4,6 +4,7 @@ import de.snowii.mastermind.module.modules.combat.KillAura
 import de.snowii.mastermind.module.modules.combat.TriggerBot
 import de.snowii.mastermind.module.modules.`fun`.Derp
 import de.snowii.mastermind.module.modules.movement.Sprint
+import de.snowii.mastermind.module.modules.movement.Step
 import de.snowii.mastermind.module.modules.player.AutoArmor
 import de.snowii.mastermind.module.modules.player.ChestStealer
 import de.snowii.mastermind.module.modules.player.InvManager
@@ -29,6 +30,7 @@ object ModuleManager {
         registerModule(InvManager)
 
         // MOVEMENT
+        registerModule(Step)
         registerModule(Sprint)
 
         // RENDER

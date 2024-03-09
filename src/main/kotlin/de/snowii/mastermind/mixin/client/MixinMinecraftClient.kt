@@ -13,8 +13,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo
 @Mixin(MinecraftClient::class)
 class MixinMinecraftClient {
 
-    var saved_yaw: Float = 0.0F
-    var saved_pitch: Float = 0.0F
+    private var savedYaw: Float = 0.0F
+    private var savedPitch: Float = 0.0F
 
     @Shadow
     var player: ClientPlayerEntity? = null
@@ -39,8 +39,8 @@ class MixinMinecraftClient {
     )
     fun onPreTick(ci: CallbackInfo) {
         if (player == null) return
-        saved_yaw = player!!.yaw
-        saved_pitch = player!!.pitch
+        savedYaw = player!!.yaw
+        savedPitch = player!!.pitch
         ModuleManager.modules.forEach { module: Module ->
             run {
                 if (module.isToggled) module.onPreUpdate()
@@ -58,8 +58,8 @@ class MixinMinecraftClient {
         )],
     )
     fun onPostTick(ci: CallbackInfo) {
-        player!!.yaw = saved_yaw
-        player!!.pitch = saved_pitch
+        player!!.yaw = savedYaw
+        player!!.pitch = savedPitch
     }
 
 

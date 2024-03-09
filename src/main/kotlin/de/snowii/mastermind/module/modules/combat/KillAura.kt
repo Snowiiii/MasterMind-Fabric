@@ -23,6 +23,8 @@ import net.minecraft.util.Hand
 import net.minecraft.util.hit.EntityHitResult
 import net.minecraft.util.hit.HitResult
 import org.lwjgl.glfw.GLFW
+import java.util.function.ToDoubleFunction
+
 
 object KillAura : Module("KillAura", "Attacks Entities nearby", Category.COMBAT) {
     private val CPS_MIN = SettingInt("CPS Min", 8, 1, 20)
@@ -132,7 +134,7 @@ object KillAura : Module("KillAura", "Attacks Entities nearby", Category.COMBAT)
     }
 
     override fun onPreUpdate() {
-        targets = mc.world!!.entities.filter { entity: Entity -> allowToAttack(entity) }
+        targets = mc.world!!.entities.filterIsInstance<LivingEntity>().filter(this::allowToAttack).sortedBy { it.distanceTo(mc.player) }
         targets!!.forEach { entity: Entity ->
             run {
                 if (ROTATION.value) {
@@ -166,9 +168,9 @@ object KillAura : Module("KillAura", "Attacks Entities nearby", Category.COMBAT)
         }
     }
 
-    private fun allowToAttack(entity: Entity): Boolean {
+    private fun allowToAttack(entity: LivingEntity): Boolean {
         val RANGE = if (PRE_AIM.value) RANGE.value + PRE_AIM_RANGE.value else RANGE.value
-        return if (entity is LivingEntity && entity !== mc.player && mc.player!!.distanceTo(
+        return if (entity !== mc.player && mc.player!!.distanceTo(
                 entity
             ) <= RANGE && mc.player!!.canTarget(entity) && entity.isAttackable
         ) {

@@ -6,7 +6,6 @@ import de.snowii.mastermind.settings.SettingFloat
 import de.snowii.mastermind.util.RenderUtil
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents
-import net.minecraft.entity.Entity
 import net.minecraft.entity.LivingEntity
 import net.minecraft.entity.mob.Monster
 import net.minecraft.entity.passive.AnimalEntity
@@ -36,7 +35,7 @@ object Tracers : Module("Tracers", "Displays 2D lines to Targets", Category.REND
         addSetting(WIDTH)
         WorldRenderEvents.BEFORE_DEBUG_RENDER.register(WorldRenderEvents.DebugRender { context: WorldRenderContext ->
             if (this.isToggled)
-                for (entity in mc.world!!.entities) {
+                for (entity in mc.world!!.entities.filterIsInstance<LivingEntity>()) {
                     if (allowToESP(entity)) {
                         RenderUtil.draw2DLine(
                             context,
@@ -55,9 +54,9 @@ object Tracers : Module("Tracers", "Displays 2D lines to Targets", Category.REND
     }
 
 
-    private fun allowToESP(entity: Entity): Boolean {
+    private fun allowToESP(entity: LivingEntity): Boolean {
         val cam = mc.gameRenderer.camera.pos
-        return if (entity is LivingEntity && entity !== mc.player && entity.shouldRender(
+        return if (entity !== mc.player && entity.shouldRender(
                 cam.x,
                 cam.y,
                 cam.z
