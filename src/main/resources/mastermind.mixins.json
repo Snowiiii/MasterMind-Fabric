@@ -9,7 +9,6 @@
     "client.MixinMinecraftClient",
     "client.entity.MixinEntity",
     "client.gui.MixinTitleScreen",
-    "client.render.MixinGameRenderer",
     "client.render.MixinWorldRenderer"
   ],
   "injectors": {

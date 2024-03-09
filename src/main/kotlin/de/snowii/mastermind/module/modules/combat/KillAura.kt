@@ -23,7 +23,6 @@ import net.minecraft.util.Hand
 import net.minecraft.util.hit.EntityHitResult
 import net.minecraft.util.hit.HitResult
 import org.lwjgl.glfw.GLFW
-import java.util.function.ToDoubleFunction
 
 
 object KillAura : Module("KillAura", "Attacks Entities nearby", Category.COMBAT) {
@@ -134,6 +133,7 @@ object KillAura : Module("KillAura", "Attacks Entities nearby", Category.COMBAT)
     }
 
     override fun onPreUpdate() {
+        RotationUtils.move_camera = true
         targets = mc.world!!.entities.filterIsInstance<LivingEntity>().filter(this::allowToAttack).sortedBy { it.distanceTo(mc.player) }
         targets!!.forEach { entity: Entity ->
             run {

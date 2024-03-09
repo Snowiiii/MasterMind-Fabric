@@ -5,19 +5,21 @@ import de.snowii.mastermind.settings.SettingBoolean
 import de.snowii.mastermind.util.RotationUtils
 import de.snowii.mastermind.util.TimeHelper
 import net.minecraft.block.Block
-import net.minecraft.block.ChestBlock
 import net.minecraft.block.FallingBlock
 import net.minecraft.item.BlockItem
 import net.minecraft.item.ItemStack
 import net.minecraft.util.ActionResult
 import net.minecraft.util.Hand
 import net.minecraft.util.hit.BlockHitResult
+import net.minecraft.util.hit.HitResult
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Direction
+import net.minecraft.util.math.Vec3d
 import org.lwjgl.glfw.GLFW
 
 object Scaffold : Module("Scaffold", "Makes you an professional bridger", Category.WORLD) {
     private val BLOCK_SWITCH = SettingBoolean("Block Switch", true)
+    private val RAY_TRACE = SettingBoolean("RayTrace", true)
     private val ROTATION = SettingBoolean("Rotation", true)
 
     private var currentPos: BlockPos? = null
@@ -27,11 +29,12 @@ object Scaffold : Module("Scaffold", "Makes you an professional bridger", Catego
     private var shouldPlace = false
     private var oldSlot = 0
 
-    private var current_rot: Float? = null
+    private var current_rot: FloatArray? = null
 
     init {
         key(GLFW.GLFW_KEY_V)
         addSetting(BLOCK_SWITCH)
+        addSetting(RAY_TRACE)
         addSetting(ROTATION)
     }
 
@@ -47,16 +50,15 @@ object Scaffold : Module("Scaffold", "Makes you an professional bridger", Catego
 
         if (currentPos != null) {
             mc.player!!.isSprinting = false
-            current_rot = getRotation()
+            current_rot = getRotation(currentFacing!!)
             shouldPlace = true
         }
 
         if (ROTATION.value && shouldLook && current_rot != null) {
             mc.player!!.isSprinting = false
-            val pitch = 80.0f // god bridge
             RotationUtils.setRotation(
-                current_rot!!,
-                pitch
+                current_rot!![0],
+                current_rot!![1]
             )
         }
 
@@ -65,7 +67,7 @@ object Scaffold : Module("Scaffold", "Makes you an professional bridger", Catego
             shouldLook = false
             current_rot = null
             lookTime.reset()
-            // mc.player.moveCamera = false
+            RotationUtils.move_camera = false
         }
     }
 
@@ -75,9 +77,16 @@ object Scaffold : Module("Scaffold", "Makes you an professional bridger", Catego
             val stack_off = mc.player!!.getStackInHand(Hand.OFF_HAND)
             if ((stack_main.isEmpty || stack_main.item !is BlockItem) && (stack_off.isEmpty || stack_off.item !is BlockItem)) {
                 if (!searchAndSelectBlock()) return
-            } else if (isBlockBad((stack_main.item as BlockItem).block) && isBlockBad((stack_off.item as BlockItem).block)) if (!searchAndSelectBlock()) return
-            // mc.player.moveCamera = true
-            placeBlock()
+            } else if (isBlockBad((stack_main.item as BlockItem).block) && isBlockBad((stack_off.item as BlockItem).block)) if (!searchAndSelectBlock()) return // TODO: Fix crashes
+            RotationUtils.move_camera = true
+            if (RAY_TRACE.value) {
+                val yaw = if (current_rot != null) (current_rot!![0]) else mc.player!!.yaw
+                val pitch = if (current_rot != null) (current_rot!![1]) else mc.player!!.pitch
+                RotationUtils.rayTrace(yaw, pitch)
+                if (mc.crosshairTarget != null && mc.crosshairTarget!!.type == HitResult.Type.BLOCK) {
+                    mc.doItemUse()
+                }
+            } else placeBlock();
             if (BLOCK_SWITCH.value) mc.player!!.inventory.selectedSlot = oldSlot
             shouldPlace = false
             lookTime.reset()
@@ -98,8 +107,12 @@ object Scaffold : Module("Scaffold", "Makes you an professional bridger", Catego
         return false
     }
 
-    private fun getRotation(): Float {
-        return RotationUtils.getRotationsTo(currentPos!!.toCenterPos())[0]
+    private fun getRotation(direction: Direction): FloatArray {
+        val rot = RotationUtils.getRotationsTo(
+            currentPos!!.toCenterPos().add(Vec3d.of(direction.vector).multiply(0.5))
+        )
+        rot[1] = 80.0F // TODO
+        return rot
     }
 
     private fun isBlockBad(block: Block): Boolean {
@@ -108,28 +121,19 @@ object Scaffold : Module("Scaffold", "Makes you an professional bridger", Catego
 
     private fun setBlockAndFacing(pos: BlockPos) {
         val world = mc.world!!
-        if (!mc.world!!.getBlockState(pos.down()).isAir && shouldLook) {
-            currentPos = pos.down()
-            currentFacing = Direction.UP
-        } else if (!world.getBlockState(pos.west()).isAir) {
-            currentPos = pos.west()
-            currentFacing = Direction.EAST
-        } else if (!world.getBlockState(pos.east()).isAir) {
-            currentPos = pos.east()
-            currentFacing = Direction.WEST
-        } else if (!world.getBlockState(pos.north()).isAir) {
-            currentPos = pos.north()
-            currentFacing = Direction.SOUTH
-        } else if (!world.getBlockState(pos.south()).isAir) {
-            currentPos = pos.south()
-            currentFacing = Direction.NORTH
-        } else if (!world.getBlockState(pos.add(0, -2, 0)).isAir) {
-            currentPos = pos.add(0, -2, 0)
-            currentFacing = Direction.UP
-        } else {
-            currentPos = null
-            currentFacing = null
+        for (direction in Direction.entries) {
+            if (!mc.world!!.getBlockState(pos.offset(direction)).isAir) {
+                currentPos = pos.offset(direction)
+                currentFacing = direction.opposite
+                return
+            } else if (!world.getBlockState(pos.add(0, -2, 0)).isAir) {
+                currentPos = pos.add(0, -2, 0)
+                currentFacing = Direction.UP
+                return
+            }
         }
+        currentPos = null
+        currentFacing = null
     }
 
     private fun placeBlock() {
@@ -160,5 +164,9 @@ object Scaffold : Module("Scaffold", "Makes you an professional bridger", Catego
                 }
             }
         }
+    }
+
+    override fun onDisable() {
+        RotationUtils.move_camera = false
     }
 }

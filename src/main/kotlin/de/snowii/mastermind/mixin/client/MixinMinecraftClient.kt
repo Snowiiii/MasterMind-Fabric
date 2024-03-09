@@ -2,6 +2,7 @@ package de.snowii.mastermind.mixin.client
 
 import de.snowii.mastermind.module.Module
 import de.snowii.mastermind.module.ModuleManager
+import de.snowii.mastermind.util.RotationUtils
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.network.ClientPlayerEntity
 import org.spongepowered.asm.mixin.Mixin
@@ -12,9 +13,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo
 
 @Mixin(MinecraftClient::class)
 class MixinMinecraftClient {
-
-    private var savedYaw: Float = 0.0F
-    private var savedPitch: Float = 0.0F
 
     @Shadow
     var player: ClientPlayerEntity? = null
@@ -28,6 +26,7 @@ class MixinMinecraftClient {
     fun handleInputEvents(ci: CallbackInfo) {
         ModuleManager.modules.forEach { module: Module -> if (module.isToggled) module.onKeyboardTick() }
     }
+
     @Inject(
         method = ["tick()V"],
         at = [At(
@@ -39,8 +38,8 @@ class MixinMinecraftClient {
     )
     fun onPreTick(ci: CallbackInfo) {
         if (player == null) return
-        savedYaw = player!!.yaw
-        savedPitch = player!!.pitch
+        RotationUtils.savedYaw = player!!.yaw
+        RotationUtils.savedPitch = player!!.pitch
         ModuleManager.modules.forEach { module: Module ->
             run {
                 if (module.isToggled) module.onPreUpdate()
@@ -58,10 +57,9 @@ class MixinMinecraftClient {
         )],
     )
     fun onPostTick(ci: CallbackInfo) {
-        player!!.yaw = savedYaw
-        player!!.pitch = savedPitch
+        player!!.yaw = RotationUtils.savedYaw
+        player!!.pitch = RotationUtils.savedPitch
     }
-
 
 
 }

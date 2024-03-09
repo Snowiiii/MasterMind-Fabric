@@ -16,10 +16,10 @@ object RotationUtils {
             return f * f * f * 8.0 * 0.15F
         }
 
-    var camera_yaw: Float = 0.0F
-    var camera_pitch: Float = 0.0F
-    var prev_camera_yaw: Float = 0.0F
-    var prev_camera_pitch: Float = 0.0F
+    var move_camera: Boolean = false
+
+    var savedYaw: Float = 0.0F
+    var savedPitch: Float = 0.0F
 
     fun rayTrace(yaw: Float, pitch: Float) {
         val player = mc.player!!

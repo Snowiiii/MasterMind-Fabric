@@ -10,6 +10,9 @@ mutable field net/minecraft/client/MinecraftClient sessionService Lcom/mojang/au
 
 accessible method net/minecraft/client/MinecraftClient doAttack ()Z
 
+accessible method net/minecraft/client/MinecraftClient doItemUse ()V
+
 accessible field net/minecraft/client/network/ClientPlayerEntity lastYaw F
 accessible field net/minecraft/client/network/ClientPlayerEntity lastPitch F
 
+accessible method net/minecraft/entity/Entity movementInputToVelocity (Lnet/minecraft/util/math/Vec3d;FF)Lnet/minecraft/util/math/Vec3d;
