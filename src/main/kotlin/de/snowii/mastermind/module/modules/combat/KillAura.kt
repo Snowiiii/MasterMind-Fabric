@@ -133,7 +133,6 @@ object KillAura : Module("KillAura", "Attacks Entities nearby", Category.COMBAT)
     }
 
     override fun onPreUpdate() {
-        RotationUtils.move_camera = true
         targets = mc.world!!.entities.filterIsInstance<LivingEntity>().filter(this::allowToAttack).sortedBy { it.distanceTo(mc.player) }
         targets!!.forEach { entity: Entity ->
             run {
