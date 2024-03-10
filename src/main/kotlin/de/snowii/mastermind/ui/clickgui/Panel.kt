@@ -33,7 +33,7 @@ class Panel(val title: String, var x: Int, var y: Int, modules: List<Module>, va
     }
 
     fun render(context: DrawContext, mouseX: Int, mouseY: Int, delta: Float) {
-        hovered = mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + current_height
+        this.hovered = (mouseX >= this.x) && (mouseY >= this.y) && (mouseX < this.x + this.width) && (mouseY < this.y + this.height)
         if (current_height < height) {
             current_height += 0.2f
         }
@@ -61,10 +61,10 @@ class Panel(val title: String, var x: Int, var y: Int, modules: List<Module>, va
             // Box
             RenderUtil.drawRoundedRect(
                 context,
-                (x - 5).toFloat(),
-                (y - 10).toFloat(),
-                width.toFloat(),
-                current_height + i,
+                (x - 5),
+                (y - 10),
+                width,
+                (current_height + i).toInt(),
                 10f,
                 background_color
             )

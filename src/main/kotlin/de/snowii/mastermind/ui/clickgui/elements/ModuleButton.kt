@@ -27,7 +27,7 @@ class ModuleButton(
     }
 
     fun render(context: DrawContext, mouseX: Int, mouseY: Int, isDragging: Boolean) {
-        hovered = mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + height
+        this.hovered = (mouseX >= this.x) && (mouseY >= this.y) && (mouseX < this.x + this.width) && (mouseY < this.y + this.height)
         if (current_width < width) {
             current_width += 2f
         }
@@ -51,8 +51,8 @@ class ModuleButton(
             false
         )
         if (page != null) {
-            page!!.x = ((x + 10 + width).toFloat())
-            page!!.y = ((y + (height - 8) / 2).toFloat())
+            page!!.x = ((x + 10 + width))
+            page!!.y = ((y + (height - 8) / 2))
             page!!.render(context, mouseX, mouseY, isDragging)
             var i = y
             for (element in page!!.elements) {

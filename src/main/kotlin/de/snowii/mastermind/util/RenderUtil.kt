@@ -17,7 +17,7 @@ import kotlin.math.sin
 
 object RenderUtil {
 
-    fun draw2DLine(
+    fun draw3DLine(
         context: WorldRenderContext,
         xPar: Double,
         yPar: Double,
@@ -28,7 +28,6 @@ object RenderUtil {
         alpha: Float,
         lineWdith: Float
     ) {
-        val mc = MinecraftClient.getInstance()
         val camera = context.camera()
         val center = Vec3d(0.0, 0.0, 1.0)
             .rotateX(-Math.toRadians(camera.pitch.toDouble()).toFloat())
@@ -62,10 +61,10 @@ object RenderUtil {
 
     fun drawRoundedRect(
         context: DrawContext,
-        x: Float,
-        y: Float,
-        width: Float,
-        height: Float,
+        x: Int,
+        y: Int,
+        width: Int,
+        height: Int,
         radius: Float,
         color: Int
     ) {
@@ -73,20 +72,20 @@ object RenderUtil {
             (x + radius).toInt(),
             (y + 2 * radius).toInt(),
             (x + width + radius).toInt(),
-            (y + height).toInt(),
+            (y + height),
             color
         )
         context.fill(
             (x + 2 * radius).toInt(),
             (y + radius).toInt(),
-            (x + width).toInt(),
+            (x + width),
             (y + 2 * radius).toInt(),
             color
         )
         context.fill(
             (x + 2 * radius).toInt(),
-            (y + height).toInt(),
-            (x + width).toInt(),
+            (y + height),
+            (x + width),
             (y + height + radius).toInt(),
             color
         )

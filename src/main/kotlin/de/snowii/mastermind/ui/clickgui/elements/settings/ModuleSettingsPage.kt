@@ -10,9 +10,7 @@ import de.snowii.mastermind.util.RenderUtil
 import de.snowii.mastermind.util.SmoothAnimator
 import net.minecraft.client.gui.DrawContext
 
-class ModuleSettingsPage(module: Module, x: Int, y: Int) {
-    var x: Float = x.toFloat()
-    var y: Float = y.toFloat()
+class ModuleSettingsPage(module: Module, var x: Int, var y: Int) {
     private val width = 100
     private val height: Int
     val elements: MutableList<SettingsElement> = ArrayList()
@@ -50,8 +48,8 @@ class ModuleSettingsPage(module: Module, x: Int, y: Int) {
             context,
             x - 5,
             y - 10,
-            width.toFloat(),
-            (height / 2 - 20).toFloat(),
+            width,
+            (height / 2 - 20),
             10f,
             Panel.background_color
         )
