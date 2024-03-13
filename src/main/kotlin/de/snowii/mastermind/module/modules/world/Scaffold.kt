@@ -163,6 +163,7 @@ object Scaffold : Module("Scaffold", "Makes you an professional bridger", Catego
 
                 }
             }
+            mc.handleBlockBreaking(false)
         }
     }
 

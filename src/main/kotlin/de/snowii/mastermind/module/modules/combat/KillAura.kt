@@ -133,7 +133,8 @@ object KillAura : Module("KillAura", "Attacks Entities nearby", Category.COMBAT)
     }
 
     override fun onPreUpdate() {
-        targets = mc.world!!.entities.filterIsInstance<LivingEntity>().filter(this::allowToAttack).sortedBy { it.distanceTo(mc.player) }
+        targets = mc.world!!.entities.filterIsInstance<LivingEntity>().filter(this::allowToAttack)
+            .sortedBy { it.distanceTo(mc.player) }
         targets!!.forEach { entity: Entity ->
             run {
                 if (ROTATION.value) {
@@ -210,6 +211,7 @@ object KillAura : Module("KillAura", "Attacks Entities nearby", Category.COMBAT)
             current_cps = (CPS_MIN.value..CPS_MAX.value).random()
             hitTimer.reset()
         }
+        mc.handleBlockBreaking(false)
     }
 
     override fun onDisable() {

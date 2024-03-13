@@ -50,7 +50,7 @@ class ModuleSettingsPage(module: Module, var x: Int, var y: Int) {
             y - 10,
             width,
             (height / 2 - 20),
-            10f,
+            10,
             Panel.background_color
         )
         for (element in elements) {

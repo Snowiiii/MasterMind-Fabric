@@ -52,7 +52,7 @@ object ModuleManager {
         modules.add(module)
     }
 
-    public fun findModuleByName(name: String) : Module? {
+    public fun findModuleByName(name: String): Module? {
         for (module in modules) {
             if (module.name.equals(name, ignoreCase = true)) return module
         }

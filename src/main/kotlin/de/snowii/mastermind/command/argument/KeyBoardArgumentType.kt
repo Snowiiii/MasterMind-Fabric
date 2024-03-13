@@ -21,7 +21,8 @@ class KeyBoardArgumentType : ArgumentType<InputUtil.Key> {
     override fun parse(reader: StringReader): InputUtil.Key {
         val string: String = reader.readUnquotedString()
         val key =
-            InputUtil.fromTranslationKey("key.keyboard." + string[2].lowercase(Locale.getDefault())) ?: throw INVALID_KEY_EXCEPTION.createWithContext(reader, string)
+            InputUtil.fromTranslationKey("key.keyboard." + string[2].lowercase(Locale.getDefault()))
+                ?: throw INVALID_KEY_EXCEPTION.createWithContext(reader, string)
         return key
     }
 

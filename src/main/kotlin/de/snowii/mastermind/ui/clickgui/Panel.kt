@@ -33,7 +33,8 @@ class Panel(val title: String, var x: Int, var y: Int, modules: List<Module>, va
     }
 
     fun render(context: DrawContext, mouseX: Int, mouseY: Int, delta: Float) {
-        this.hovered = (mouseX >= this.x) && (mouseY >= this.y) && (mouseX < this.x + this.width) && (mouseY < this.y + this.height)
+        this.hovered =
+            (mouseX >= this.x) && (mouseY >= this.y) && (mouseX < this.x + this.width) && (mouseY < this.y + this.height)
         if (current_height < height) {
             current_height += 0.2f
         }
@@ -65,7 +66,7 @@ class Panel(val title: String, var x: Int, var y: Int, modules: List<Module>, va
                 (y - 10),
                 width,
                 (current_height + i).toInt(),
-                10f,
+                10,
                 background_color
             )
 

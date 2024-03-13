@@ -7,5 +7,4 @@ import org.spongepowered.asm.mixin.Mixin
 class MixinWorldRenderer {
 
 
-
 }

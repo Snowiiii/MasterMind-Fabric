@@ -65,28 +65,28 @@ object RenderUtil {
         y: Int,
         width: Int,
         height: Int,
-        radius: Float,
+        radius: Int,
         color: Int
     ) {
         context.fill(
-            (x + radius).toInt(),
-            (y + 2 * radius).toInt(),
-            (x + width + radius).toInt(),
+            (x + radius),
+            (y + 2 * radius),
+            (x + width + radius),
             (y + height),
             color
         )
         context.fill(
-            (x + 2 * radius).toInt(),
-            (y + radius).toInt(),
+            (x + 2 * radius),
+            (y + radius),
             (x + width),
-            (y + 2 * radius).toInt(),
+            (y + 2 * radius),
             color
         )
         context.fill(
-            (x + 2 * radius).toInt(),
+            (x + 2 * radius),
             (y + height),
             (x + width),
-            (y + height + radius).toInt(),
+            (y + height + radius),
             color
         )
 
@@ -98,6 +98,7 @@ object RenderUtil {
         val cx = x + radius
         val cy = y + radius
         val angles = doubleArrayOf(Math.PI * 3.5, Math.PI * 3.0, Math.PI * 2.5, 0.0)
+        val radius = radius.toFloat();
         val offsets = arrayOf(
             floatArrayOf(radius, radius),
             floatArrayOf(width - radius, radius),

@@ -8,7 +8,7 @@ import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
 import net.minecraft.util.Formatting
 
-class PanicCommand  {
+class PanicCommand {
 
     val COMMAND = ClientCommandManager.literal("panic").executes { context -> run(context) }
 
