@@ -3,6 +3,7 @@ package de.snowii.mastermind.module.modules.render
 import de.snowii.mastermind.module.Module
 import de.snowii.mastermind.settings.SettingBoolean
 import de.snowii.mastermind.settings.SettingFloat
+import de.snowii.mastermind.util.EntityTracker
 import de.snowii.mastermind.util.RenderUtil
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents
@@ -11,6 +12,7 @@ import net.minecraft.entity.mob.Monster
 import net.minecraft.entity.passive.AnimalEntity
 import net.minecraft.entity.passive.VillagerEntity
 import net.minecraft.entity.player.PlayerEntity
+import java.util.*
 
 object ESP : Module("ESP", "Allows to see Entities throw Walls", Category.RENDER) {
 
@@ -36,8 +38,7 @@ object ESP : Module("ESP", "Allows to see Entities throw Walls", Category.RENDER
         addSetting(WIDTH)
         WorldRenderEvents.BEFORE_DEBUG_RENDER.register(WorldRenderEvents.DebugRender { context: WorldRenderContext ->
             if (this.isToggled)
-                for (entity in mc.world!!.entities.filterIsInstance<LivingEntity>()) {
-                    if (allowToESP(entity)) {
+                for (entity in EntityTracker.entities(EntityTracker.EntityFilter(TARGET_PLAYERS.value, TARGET_MOBS.value, TARGET_ANIMAL.value, TARGET_VILLAGER.value), Optional.empty())) {
                         RenderUtil.draw3DLine(
                             context,
                             entity.x,
@@ -49,41 +50,11 @@ object ESP : Module("ESP", "Allows to see Entities throw Walls", Category.RENDER
                             ALPHA.value,
                             WIDTH.value
                         )
-                    }
                 }
         })
     }
 
 
-    private fun allowToESP(entity: LivingEntity): Boolean {
-        val cam = mc.gameRenderer.camera.pos
-        return if (entity !== mc.player && entity.shouldRender(
-                cam.x,
-                cam.y,
-                cam.z
-            ) && entity.isAlive
-        ) {
-            when (entity) {
-                is PlayerEntity -> {
-                    return TARGET_PLAYERS.value && mc.player!!.canTarget(entity) // TODO Mid click
-                }
-
-                is Monster -> {
-                    return TARGET_MOBS.value
-                }
-
-                is AnimalEntity -> {
-                    return TARGET_ANIMAL.value
-                }
-
-                is VillagerEntity -> {
-                    return TARGET_VILLAGER.value
-                }
-
-                else -> false
-            }
-        } else false
-    }
 
 
 }

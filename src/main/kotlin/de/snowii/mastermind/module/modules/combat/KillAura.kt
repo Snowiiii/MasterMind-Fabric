@@ -2,9 +2,11 @@ package de.snowii.mastermind.module.modules.combat
 
 import de.snowii.mastermind.module.Module
 import de.snowii.mastermind.module.modules.player.MidClick
+import de.snowii.mastermind.module.modules.render.ESP
 import de.snowii.mastermind.settings.SettingBoolean
 import de.snowii.mastermind.settings.SettingFloat
 import de.snowii.mastermind.settings.SettingInt
+import de.snowii.mastermind.util.EntityTracker
 import de.snowii.mastermind.util.RenderUtil
 import de.snowii.mastermind.util.RotationUtils
 import de.snowii.mastermind.util.TimeHelper
@@ -23,6 +25,7 @@ import net.minecraft.util.Hand
 import net.minecraft.util.hit.EntityHitResult
 import net.minecraft.util.hit.HitResult
 import org.lwjgl.glfw.GLFW
+import java.util.*
 
 
 object KillAura : Module("KillAura", "Attacks Entities nearby", Category.COMBAT) {
@@ -133,8 +136,8 @@ object KillAura : Module("KillAura", "Attacks Entities nearby", Category.COMBAT)
     }
 
     override fun onPreUpdate() {
-        targets = mc.world!!.entities.filterIsInstance<LivingEntity>().filter(this::allowToAttack)
-            .sortedBy { it.distanceTo(mc.player) }
+        val RANGE = if (PRE_AIM.value) RANGE.value + PRE_AIM_RANGE.value else RANGE.value
+        targets = EntityTracker.entities(EntityTracker.EntityFilter(TARGET_PLAYERS.value, TARGET_MOBS.value, TARGET_ANIMAL.value, TARGET_VILLAGER.value), Optional.of(RANGE))
         targets!!.forEach { entity: Entity ->
             run {
                 if (ROTATION.value) {
@@ -168,34 +171,6 @@ object KillAura : Module("KillAura", "Attacks Entities nearby", Category.COMBAT)
         }
     }
 
-    private fun allowToAttack(entity: LivingEntity): Boolean {
-        val RANGE = if (PRE_AIM.value) RANGE.value + PRE_AIM_RANGE.value else RANGE.value
-        return if (entity !== mc.player && mc.player!!.distanceTo(
-                entity
-            ) <= RANGE && mc.player!!.canTarget(entity) && entity.isAttackable
-        ) {
-            when (entity) {
-                is PlayerEntity -> {
-                    return TARGET_PLAYERS.value && !MidClick.friends.contains(entity.uuid)
-                }
-
-                is Monster -> {
-                    return TARGET_MOBS.value
-                }
-
-                is AnimalEntity -> {
-                    return TARGET_ANIMAL.value
-                }
-
-                is VillagerEntity -> {
-                    return TARGET_VILLAGER.value
-                }
-
-                else -> false
-            }
-        } else false
-    }
-
     private fun attackEntity(entity: Entity) {
         if (!mc.player!!.isUsingItem && hitTimer.hasTimeReached((1000 / current_cps).toLong())) {
             if (NEW_PVP.value && mc.player!!.getAttackCooldownProgress(1.0F) < 1.0F) return
@@ -211,7 +186,6 @@ object KillAura : Module("KillAura", "Attacks Entities nearby", Category.COMBAT)
             current_cps = (CPS_MIN.value..CPS_MAX.value).random()
             hitTimer.reset()
         }
-        mc.handleBlockBreaking(false)
     }
 
     override fun onDisable() {

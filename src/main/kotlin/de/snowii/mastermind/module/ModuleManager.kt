@@ -1,5 +1,6 @@
 package de.snowii.mastermind.module
 
+import de.snowii.mastermind.module.modules.combat.AutoRod
 import de.snowii.mastermind.module.modules.combat.KillAura
 import de.snowii.mastermind.module.modules.combat.TriggerBot
 import de.snowii.mastermind.module.modules.`fun`.Derp
@@ -22,6 +23,7 @@ object ModuleManager {
         // COMBAT
         registerModule(KillAura)
         registerModule(TriggerBot)
+        registerModule(AutoRod)
 
         // PLAYER
         registerModule(AutoArmor)

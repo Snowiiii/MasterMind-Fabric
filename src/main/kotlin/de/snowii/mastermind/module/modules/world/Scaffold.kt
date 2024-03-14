@@ -6,6 +6,7 @@ import de.snowii.mastermind.util.RotationUtils
 import de.snowii.mastermind.util.TimeHelper
 import net.minecraft.block.Block
 import net.minecraft.block.FallingBlock
+import net.minecraft.block.LadderBlock
 import net.minecraft.item.BlockItem
 import net.minecraft.item.ItemStack
 import net.minecraft.util.ActionResult
@@ -163,7 +164,6 @@ object Scaffold : Module("Scaffold", "Makes you an professional bridger", Catego
 
                 }
             }
-            mc.handleBlockBreaking(false)
         }
     }
 
