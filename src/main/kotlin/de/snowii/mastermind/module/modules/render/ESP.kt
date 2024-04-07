@@ -7,11 +7,6 @@ import de.snowii.mastermind.util.EntityTracker
 import de.snowii.mastermind.util.RenderUtil
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.mob.Monster
-import net.minecraft.entity.passive.AnimalEntity
-import net.minecraft.entity.passive.VillagerEntity
-import net.minecraft.entity.player.PlayerEntity
 import java.util.*
 
 object ESP : Module("ESP", "Allows to see Entities throw Walls", Category.RENDER) {

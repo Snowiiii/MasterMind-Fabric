@@ -1,8 +1,6 @@
 package de.snowii.mastermind.module.modules.combat
 
 import de.snowii.mastermind.module.Module
-import de.snowii.mastermind.module.modules.player.MidClick
-import de.snowii.mastermind.module.modules.render.ESP
 import de.snowii.mastermind.settings.SettingBoolean
 import de.snowii.mastermind.settings.SettingFloat
 import de.snowii.mastermind.settings.SettingInt
@@ -15,11 +13,6 @@ import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents
 import net.fabricmc.fabric.api.entity.event.v1.ServerEntityWorldChangeEvents
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents
 import net.minecraft.entity.Entity
-import net.minecraft.entity.LivingEntity
-import net.minecraft.entity.mob.Monster
-import net.minecraft.entity.passive.AnimalEntity
-import net.minecraft.entity.passive.VillagerEntity
-import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.util.Hand
 import net.minecraft.util.hit.EntityHitResult
