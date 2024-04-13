@@ -5,6 +5,7 @@ import de.snowii.mastermind.settings.SettingBoolean
 import de.snowii.mastermind.util.RotationUtils
 import de.snowii.mastermind.util.TimeHelper
 import net.minecraft.block.Block
+import net.minecraft.block.CobwebBlock
 import net.minecraft.block.FallingBlock
 import net.minecraft.item.BlockItem
 import net.minecraft.item.ItemStack

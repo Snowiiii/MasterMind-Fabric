@@ -24,7 +24,7 @@ import java.util.*
 object KillAura : Module("KillAura", "Attacks Entities nearby", Category.COMBAT) {
     private val CPS_MIN = SettingInt("CPS Min", 8, 1, 20)
     private val CPS_MAX = SettingInt("CPS Max", 14, 2, 40)
-    private val RANGE = SettingFloat("Range", 3.3f, 3.0F, 8.0f)
+    public val RANGE = SettingFloat("Range", 3.3f, 3.0F, 8.0f)
 
     private val TARGET_PLAYERS = SettingBoolean("Players", true)
     private val TARGET_ANIMAL = SettingBoolean("Animals", false)
@@ -184,5 +184,7 @@ object KillAura : Module("KillAura", "Attacks Entities nearby", Category.COMBAT)
     override fun onDisable() {
         targets = null
     }
+
+
 
 }
