@@ -34,7 +34,7 @@ class ModuleSettingsPage(module: Module, var x: Int, var y: Int) {
                     elements.add(SettingsElementBool(setting, x, i))
                 }
 
-                is SettingMode -> {
+                is SettingMode<*> -> {
                     elements.add(SettingsElementMode(setting, x, i))
                 }
             }

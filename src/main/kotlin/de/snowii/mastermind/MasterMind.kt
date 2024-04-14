@@ -21,7 +21,7 @@ class MasterMind : ClientModInitializer {
     }
 
     companion object {
-        val LOGGER = LoggerFactory.getLogger("mastermind")
+        val LOGGER = LoggerFactory.getLogger("mastermind")!!
         lateinit var directory: File
     }
 }

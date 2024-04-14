@@ -5,7 +5,7 @@ import net.minecraft.client.gui.DrawContext
 import java.awt.Color
 
 
-class SettingsElementMode(private val settingMode: SettingMode, x: Int, y: Int) : SettingsElement(x, y) {
+class SettingsElementMode(private val settingMode: SettingMode<*>, x: Int, y: Int) : SettingsElement(x, y) {
     private val color_enabled = Color(255, 200, 0, 200).rgb
     private var index = 0
     override fun drawScreen(context: DrawContext, mouseX: Int, mouseY: Int) {
@@ -22,7 +22,7 @@ class SettingsElementMode(private val settingMode: SettingMode, x: Int, y: Int) 
         )
         context.drawText(
             mc.textRenderer,
-            settingMode.displayName + ":" + settingMode.modeOriginal,
+            settingMode.displayName + ":" + settingMode.current_mode,
             (x + width / 2),
             (y + (height - 8) / 2),
             Color.WHITE.rgb,

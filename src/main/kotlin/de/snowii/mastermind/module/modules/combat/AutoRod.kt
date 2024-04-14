@@ -48,7 +48,7 @@ object AutoRod : Module("AutoRod", "Attacks Entities with an Fishing Rod", Categ
             if (!mc.player!!.isUsingItem && timer.hasTimeReached((100 * current_delay).toLong())) {
                 val rod_slot = searchRod()
                 if (rod_slot != null) {
-                    val range = if (CUSTOM_RANGE.value) RANGE.value else { KillAura.RANGE.value + 0.1F }
+                    val range = if (CUSTOM_RANGE.value) RANGE.value else { KillAura.RANGE.value + 0.2F }
                     val targets = EntityTracker.entities(
                         EntityTracker.EntityFilter(
                             TARGET_PLAYERS.value,
