@@ -15,7 +15,7 @@ object EntityTracker {
     fun entities(filter: EntityFilter, range: Optional<Float>): Iterable<Entity> {
         val mc = MinecraftClient.getInstance()
         return mc.world!!.entities.filterIsInstance<LivingEntity>().filter { this.allowToAttack(it, filter, range) }
-                .sortedBy { it.distanceTo(mc.player) }
+                .sortedBy { it.squaredDistanceTo(mc.player) }
     }
 
     private fun allowToAttack(entity: LivingEntity, filter: EntityFilter, range: Optional<Float>): Boolean {

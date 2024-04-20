@@ -14,7 +14,7 @@ class Panel(val title: String, var x: Int, var y: Int, modules: List<Module>, va
     private val moduleButtons: MutableList<ModuleButton> = ArrayList()
     private var isDragging = false
     protected var hovered = false
-    private var current_height: Float
+    private var current_height = (height / 4).toFloat()
     private val animator = SmoothAnimator()
 
     init {
@@ -24,7 +24,6 @@ class Panel(val title: String, var x: Int, var y: Int, modules: List<Module>, va
             i += height
             moduleButtons.add(ModuleButton(module, x, i, width, height, mc))
         }
-        current_height = (height / 4).toFloat()
     }
 
     fun init() {

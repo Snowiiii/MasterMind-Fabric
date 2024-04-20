@@ -51,7 +51,7 @@ object KillAura : Module("KillAura", "Attacks Entities nearby", Category.COMBAT)
     var hitTimer = TimeHelper()
     var rotations: FloatArray = FloatArray(2)
     var current_cps = (CPS_MIN.value..CPS_MAX.value).random()
-    private var targets: Iterable<Entity>? = null
+     var targets: Iterable<Entity>? = null
 
 
     init {
@@ -167,7 +167,7 @@ object KillAura : Module("KillAura", "Attacks Entities nearby", Category.COMBAT)
     private fun attackEntity(entity: Entity) {
         if (!mc.player!!.isUsingItem && hitTimer.hasTimeReached((1000 / current_cps).toLong())) {
             if (NEW_PVP.value && mc.player!!.getAttackCooldownProgress(1.0F) < 1.0F) return
-            // keep in mind that when attacking, Velocity packets will be send, calculated using yaw & pitch
+            // keep in mind that when attacking, Velocity packets will be sent, calculated using yaw & pitch
             if (RAY_TRACE.value) {
                 mc.doAttack()
             } else {

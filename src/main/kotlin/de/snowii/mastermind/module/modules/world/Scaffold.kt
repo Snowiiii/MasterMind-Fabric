@@ -5,7 +5,6 @@ import de.snowii.mastermind.settings.SettingBoolean
 import de.snowii.mastermind.util.RotationUtils
 import de.snowii.mastermind.util.TimeHelper
 import net.minecraft.block.Block
-import net.minecraft.block.CobwebBlock
 import net.minecraft.block.FallingBlock
 import net.minecraft.item.BlockItem
 import net.minecraft.item.ItemStack
@@ -87,7 +86,7 @@ object Scaffold : Module("Scaffold", "Makes you an professional bridger", Catego
                 if (mc.crosshairTarget != null && mc.crosshairTarget!!.type == HitResult.Type.BLOCK) {
                     mc.doItemUse()
                 }
-            } else placeBlock();
+            } else placeBlock()
             if (BLOCK_SWITCH.value) mc.player!!.inventory.selectedSlot = oldSlot
             shouldPlace = false
             lookTime.reset()
