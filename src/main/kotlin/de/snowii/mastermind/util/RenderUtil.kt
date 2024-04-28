@@ -34,7 +34,7 @@ object RenderUtil {
             .rotateY(-Math.toRadians(camera.yaw.toDouble()).toFloat())
             .add(camera.pos)
 
-        val matrix = context.matrixStack();
+        val matrix = context.matrixStack()!!;
         val matrix4f: Matrix4f = matrix.peek().positionMatrix
 
         RenderSystem.enableBlend()
@@ -146,7 +146,7 @@ object RenderUtil {
         val xx = aa.maxX - camera.x
         val yy = aa.maxY - camera.y
         val zz = aa.maxZ - camera.z
-        val matrices: MatrixStack = context.matrixStack()
+        val matrices: MatrixStack = context.matrixStack()!!
 
         var currentLineY: Double
 

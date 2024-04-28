@@ -104,7 +104,7 @@ object AutoArmor : Module("AutoArmor", "Manages your Armor", Category.PLAYER) {
     private fun getArmorValue(item: ArmorItem, stack: ItemStack): Int {
         val armorPoints = item.protection
         val armorToughness = item.toughness.toInt()
-        val armorType = item.material.getProtection(item.type)
+        val armorType = item.protection
 
         val protection = Enchantments.PROTECTION
 

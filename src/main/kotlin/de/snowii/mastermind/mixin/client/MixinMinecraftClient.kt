@@ -31,7 +31,7 @@ class MixinMinecraftClient {
         method = ["tick()V"],
         at = [At(
             value = "INVOKE",
-            target = "Lnet/minecraft/client/render/GameRenderer;updateTargetedEntity(F)V",
+            target = "Lnet/minecraft/client/render/GameRenderer;updateCrosshairTarget(F)V",
             shift = At.Shift.AFTER
 
         )],

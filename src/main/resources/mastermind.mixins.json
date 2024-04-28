@@ -2,14 +2,14 @@
   "required": true,
   "minVersion": "0.8",
   "package": "de.snowii.mastermind.mixin",
-  "compatibilityLevel": "JAVA_17",
+  "compatibilityLevel": "JAVA_21",
   "client": [
     "client.MixinClientPlayerEntity",
     "client.MixinKeyBoard",
     "client.MixinMinecraftClient",
     "client.entity.MixinEntity",
     "client.gui.MixinTitleScreen",
-    "client.network.MixinClientPlayerInteractionManager",
+    "client.entity.player.MixinPlayerEntity",
     "client.render.MixinWorldRenderer"
   ],
   "injectors": {

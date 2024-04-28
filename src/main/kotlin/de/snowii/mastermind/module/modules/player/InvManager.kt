@@ -64,7 +64,7 @@ object InvManager : Module("InvManager", "Manages your Inventory", Category.PLAY
     }
 
     private fun getToolValue(item: ToolItem, stack: ItemStack): Float {
-        val itemPoints = item.material.durability + item.material.miningLevel + item.material.enchantability
+        val itemPoints = item.material.durability + item.material.miningSpeedMultiplier + item.material.enchantability
         val itemDamage = item.material.attackDamage
 
         val protection = Enchantments.PROTECTION

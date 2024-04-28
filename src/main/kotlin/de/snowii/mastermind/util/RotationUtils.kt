@@ -27,7 +27,7 @@ object RotationUtils {
         val current_pitch = player.pitch
         player.yaw = yaw
         player.pitch = pitch
-        mc.gameRenderer.updateTargetedEntity(1.0F)
+        mc.gameRenderer.updateCrosshairTarget(1.0F)
         player.yaw = current_yaw
         player.pitch = current_pitch
     }
