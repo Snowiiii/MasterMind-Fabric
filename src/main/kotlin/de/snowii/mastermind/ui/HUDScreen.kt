@@ -4,11 +4,12 @@ import de.snowii.mastermind.module.ModuleManager
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.gui.DrawContext
+import net.minecraft.client.render.RenderTickCounter
 import java.awt.Color
 
 class HUDScreen : HudRenderCallback {
 
-    override fun onHudRender(drawContext: DrawContext, tickDelta: Float) {
+    override fun onHudRender(drawContext: DrawContext, tickCounter: RenderTickCounter?) {
         renderArrayList(drawContext)
         renderFPS(drawContext)
     }
@@ -45,4 +46,5 @@ class HUDScreen : HudRenderCallback {
         val mc = MinecraftClient.getInstance()
         drawContext.drawText(mc.textRenderer, "FPS: ${mc.currentFps}", 1, 1, Color.WHITE.rgb, false)
     }
+
 }

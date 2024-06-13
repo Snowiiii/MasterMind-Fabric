@@ -5,8 +5,6 @@ import de.snowii.mastermind.settings.SettingInt
 import de.snowii.mastermind.util.TimeHelper
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents
 import net.minecraft.client.gui.screen.ingame.InventoryScreen
-import net.minecraft.enchantment.EnchantmentHelper
-import net.minecraft.enchantment.Enchantments
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.item.ArmorItem
 import net.minecraft.item.ItemStack
@@ -44,7 +42,7 @@ object AutoArmor : Module("AutoArmor", "Manages your Armor", Category.PLAYER) {
                             run {
                                 if (timeHelper.hasTimeReached(100L * delay)) {
                                     val bestArmorSlots = IntArray(4) { -1 }
-                                    val bestArmorValues = IntArray(4)
+                                    val bestArmorValues = FloatArray(4)
 
                                     for (type in 0..3) {
                                         val stack = mc.player!!.inventory.getArmorStack(type)
@@ -101,17 +99,15 @@ object AutoArmor : Module("AutoArmor", "Manages your Armor", Category.PLAYER) {
         addSetting(DELAY_MAX)
     }
 
-    private fun getArmorValue(item: ArmorItem, stack: ItemStack): Int {
-        val armorPoints = item.protection
-        val armorToughness = item.toughness.toInt()
-        val armorType = item.protection
-
-        val protection = Enchantments.PROTECTION
+    private fun getArmorValue(item: ArmorItem, stack: ItemStack): Float {
+        val armorPoints = item.protection.toFloat()
+        val armorToughness = item.toughness
+        val armorType = item.protection.toFloat()
 
         val dmgSource =
             mc.player!!.damageSources.playerAttack(mc.player!!)
-        val prtPoints = protection.getProtectionAmount(EnchantmentHelper.getLevel(protection, stack), dmgSource)
-
-        return armorPoints + prtPoints + armorToughness + armorType
+        // val prtPoints = EnchantmentHelper.getLevel(mc.player!!.world!! as ServerWorld?, mc.player, dmgSource)
+        // fix 1.21
+        return armorPoints /*+ prtPoints  */ + armorToughness + armorType
     }
 }

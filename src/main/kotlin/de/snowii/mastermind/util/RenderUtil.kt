@@ -43,14 +43,13 @@ object RenderUtil {
         RenderSystem.defaultBlendFunc()
         matrix.push()
         vertexConsumer.vertex(matrix4f, center.x.toFloat(), center.y.toFloat(), center.z.toFloat())
-            .color(red, green, blue, alpha).next()
+            .color(red, green, blue, alpha)
         vertexConsumer.vertex(
             matrix4f,
             (xPar - center.x).toFloat(),
             (yPar - center.y).toFloat(),
             (zPar - center.z).toFloat()
         ).color(red, green, blue, alpha)
-            .next()
         matrix.pop()
         RenderSystem.disableBlend()
     }
@@ -110,12 +109,13 @@ object RenderUtil {
         for (index in 0..3) {
             val startAngle = angles[index]
             val offset = offsets[index]
-            vertexconsumer.vertex((cx + offset[0]).toDouble(), (cy + offset[1]).toDouble(), 0.0)
-                .color(red, green, blue, alpha).next()
+            vertexconsumer.vertex((cx + offset[0]), (cy + offset[1]), 0.0F)
+                .color(red, green, blue, alpha)
             var angle = startAngle
             while (angle <= startAngle + Math.PI / 2.0 + 0.01) {
-                vertexconsumer.vertex(cx - radius * cos(angle) + offset[0], cy + radius * sin(angle) + offset[1], 0.0)
-                    .color(red, green, blue, alpha).next()
+                vertexconsumer.vertex((cx - radius * cos(angle) + offset[0]).toFloat(),
+                    (cy + radius * sin(angle) + offset[1]).toFloat(), 0.0F)
+                    .color(red, green, blue, alpha)
                 angle += Math.PI / 2.0 * 0.01
             }
         }
@@ -141,8 +141,6 @@ object RenderUtil {
         val currentY = sin(Util.getMeasuringTimeMs() / (150 - speed)) / 1.4 - 0.8
         val aa = entity.boundingBox
         val camera = context.camera().pos
-        val tessellator = Tessellator.getInstance()
-        val bufferBuilder = tessellator.buffer
         val xx = aa.maxX - camera.x
         val yy = aa.maxY - camera.y
         val zz = aa.maxZ - camera.z
@@ -165,26 +163,27 @@ object RenderUtil {
             currentLineY = line * lineSpacing
             var i = -boxHeight
             while (i <= boxHeight + 1f) {
-                bufferBuilder.begin(VertexFormat.DrawMode.DEBUG_LINE_STRIP, VertexFormats.POSITION_COLOR)
+                val bufferBuilder =
+                    Tessellator.getInstance().begin(VertexFormat.DrawMode.DEBUG_LINE_STRIP, VertexFormats.POSITION_COLOR)
                 bufferBuilder.vertex(
                     matrix4f,
                     (xx - CENTER + sin((i - lineSmoothness) * 2) / bRadius).toFloat(),
                     (yy + currentY + currentLineY).toFloat(),
                     (zz - CENTER + cos((i - lineSmoothness) * 2) / bRadius).toFloat()
-                ).color(red, green, blue, alpha).next()
+                ).color(red, green, blue, alpha)
                 bufferBuilder.vertex(
                     matrix4f,
                     (xx - CENTER + sin((i - lineSmoothness / 2) * 2) / bRadius).toFloat(),
                     (yy + currentY + currentLineY).toFloat(),
                     (zz - CENTER + cos((i - lineSmoothness / 2) * 2) / bRadius).toFloat()
-                ).color(red, green, blue, alpha).next()
+                ).color(red, green, blue, alpha)
                 bufferBuilder.vertex(
                     matrix4f,
                     (xx - CENTER + sin(i * 2) / bRadius).toFloat(), (yy + currentY + currentLineY).toFloat(),
                     (zz - CENTER + cos(i * 2) / bRadius).toFloat()
-                ).color(red, green, blue, alpha).next()
+                ).color(red, green, blue, alpha)
                 i += lineSmoothness
-                tessellator.draw()
+                BufferRenderer.drawWithGlobalProgram(bufferBuilder.end())
             }
             matrices.pop()
         }

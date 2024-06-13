@@ -10,6 +10,7 @@ import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
 import net.minecraft.item.ToolItem
 import net.minecraft.screen.slot.SlotActionType
+import net.minecraft.server.world.ServerWorld
 
 object InvManager : Module("InvManager", "Manages your Inventory", Category.PLAYER) {
 
@@ -67,13 +68,11 @@ object InvManager : Module("InvManager", "Manages your Inventory", Category.PLAY
         val itemPoints = item.material.durability + item.material.miningSpeedMultiplier + item.material.enchantability
         val itemDamage = item.material.attackDamage
 
-        val protection = Enchantments.PROTECTION
-
         val dmgSource =
             mc.player!!.damageSources.playerAttack(mc.player!!)
-        val prtPoints = protection.getProtectionAmount(EnchantmentHelper.getLevel(protection, stack), dmgSource)
+    //    val prtPoints = EnchantmentHelper.getProtectionAmount(mc.player!!.world!! as ServerWorld?, mc.player, dmgSource)
 
-        return itemPoints + prtPoints + itemDamage
+        return itemPoints + /* prtPoints */ + itemDamage
     }
 }
 
