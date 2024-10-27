@@ -2,6 +2,7 @@ package de.snowii.mastermind.mixin.client.entity
 
 import de.snowii.mastermind.util.RotationUtils
 import net.minecraft.entity.Entity
+import net.minecraft.entity.mob.ZombieEntity
 import net.minecraft.util.math.Vec3d
 import org.spongepowered.asm.mixin.Mixin
 import org.spongepowered.asm.mixin.injection.At

@@ -153,14 +153,13 @@ object Scaffold : Module("Scaffold", "Makes you an professional bridger", Catego
                     player, hand,
                     BlockHitResult(from.add(d, e, f), currentFacing, currentPos, false)
                 )
-                if (actionResult2.isAccepted) {
-                    if (actionResult2.shouldSwingHand()) {
+                if (actionResult2 is ActionResult.Success) {
+                    if (actionResult2.swingSource() == ActionResult.SwingSource.CLIENT) {
                         player.swingHand(hand)
                         if (!itemStack.isEmpty && (itemStack.count != i || mc.interactionManager!!.hasCreativeInventory())) {
                             mc.gameRenderer.firstPersonRenderer.resetEquipProgress(hand)
                         }
                     }
-
                 }
             }
         }

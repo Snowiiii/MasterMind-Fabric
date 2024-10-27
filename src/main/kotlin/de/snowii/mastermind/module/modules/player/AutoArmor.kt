@@ -8,6 +8,7 @@ import net.minecraft.client.gui.screen.ingame.InventoryScreen
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.item.ArmorItem
 import net.minecraft.item.ItemStack
+import net.minecraft.item.equipment.ArmorMaterial
 import net.minecraft.screen.slot.SlotActionType
 
 
@@ -43,7 +44,7 @@ object AutoArmor : Module("AutoArmor", "Manages your Armor", Category.PLAYER) {
                                 if (timeHelper.hasTimeReached(100L * delay)) {
                                     val bestArmorSlots = IntArray(4) { -1 }
                                     val bestArmorValues = FloatArray(4)
-
+                                    /**
                                     for (type in 0..3) {
                                         val stack = mc.player!!.inventory.getArmorStack(type)
                                         if (stack == null || stack.item !is ArmorItem) continue
@@ -55,13 +56,14 @@ object AutoArmor : Module("AutoArmor", "Manages your Armor", Category.PLAYER) {
                                         val stack = mc.player!!.inventory.getStack(slot)
                                         if (stack == null || stack.item !is ArmorItem) continue
                                         val item = stack.item as ArmorItem
-                                        val armorType = item.type.equipmentSlot.entitySlotId
+                                        val armorType = 0 // item.entitySlotId
                                         val armorValue = getArmorValue(item, stack)
                                         if (armorValue > bestArmorValues[armorType]) {
                                             bestArmorSlots[armorType] = slot
                                             bestArmorValues[armorType] = armorValue
                                         }
                                     }
+                                    **/
 
                                     val types = mutableListOf(0, 1, 2, 3).shuffled()
                                     for (type in types) {
@@ -99,10 +101,10 @@ object AutoArmor : Module("AutoArmor", "Manages your Armor", Category.PLAYER) {
         addSetting(DELAY_MAX)
     }
 
-    private fun getArmorValue(item: ArmorItem, stack: ItemStack): Float {
-        val armorPoints = item.protection.toFloat()
+    private fun getArmorValue(item: ArmorMaterial, stack: ItemStack): Float {
+        val armorPoints = item.enchantmentValue.toFloat()
         val armorToughness = item.toughness
-        val armorType = item.protection.toFloat()
+        val armorType = item.enchantmentValue.toFloat()
 
         val dmgSource =
             mc.player!!.damageSources.playerAttack(mc.player!!)

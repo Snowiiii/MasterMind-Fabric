@@ -11,7 +11,7 @@ object PlayerUtil {
 
     @Deprecated("")
     fun sendMessage(message: Any) {
-        mc.player!!.sendMessage(Text.literal(PREFIX + message.toString()))
+        mc.player!!.sendMessage(Text.literal(PREFIX + message.toString()), false)
     }
 
     fun sendMessage(source: FabricClientCommandSource, message: Any) {

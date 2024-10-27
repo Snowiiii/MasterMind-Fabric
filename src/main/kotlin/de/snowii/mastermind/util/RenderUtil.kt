@@ -3,6 +3,7 @@ package de.snowii.mastermind.util
 import com.mojang.blaze3d.systems.RenderSystem
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext
 import net.minecraft.client.MinecraftClient
+import net.minecraft.client.gl.ShaderProgramKeys
 import net.minecraft.client.gui.DrawContext
 import net.minecraft.client.render.*
 import net.minecraft.client.util.math.MatrixStack
@@ -89,10 +90,10 @@ object RenderUtil {
             color
         )
 
-        val alpha = ColorHelper.Argb.getAlpha(color) / 255.0f
-        val red = ColorHelper.Argb.getRed(color) / 255.0f
-        val green = ColorHelper.Argb.getGreen(color) / 255.0f
-        val blue = ColorHelper.Argb.getBlue(color) / 255.0f
+        val alpha = ColorHelper.getAlpha(color) / 255.0f
+        val red = ColorHelper.getRed(color) / 255.0f
+        val green = ColorHelper.getGreen(color) / 255.0f
+        val blue = ColorHelper.getBlue(color) / 255.0f
 
         val cx = x + radius
         val cy = y + radius
@@ -104,7 +105,7 @@ object RenderUtil {
             floatArrayOf(width - radius, height - radius),
             floatArrayOf(radius, height - radius)
         )
-
+        /**
         val vertexconsumer: VertexConsumer = context.vertexConsumers.getBuffer(RenderLayer.getGui())
         for (index in 0..3) {
             val startAngle = angles[index]
@@ -119,6 +120,7 @@ object RenderUtil {
                 angle += Math.PI / 2.0 * 0.01
             }
         }
+        **/
         context.draw()
     }
 
@@ -149,7 +151,7 @@ object RenderUtil {
         var currentLineY: Double
 
         // We dont use vertex consumers so we can disable depth
-        RenderSystem.setShader { GameRenderer.getPositionColorProgram() }
+        RenderSystem.setShader(ShaderProgramKeys.POSITION_COLOR)
         RenderSystem.depthMask(false)
         RenderSystem.defaultBlendFunc()
         RenderSystem.lineWidth(width)

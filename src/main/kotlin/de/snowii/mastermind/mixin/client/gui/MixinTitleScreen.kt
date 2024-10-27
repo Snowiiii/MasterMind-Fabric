@@ -9,17 +9,18 @@ import org.spongepowered.asm.mixin.Mixin
 import org.spongepowered.asm.mixin.injection.At
 import org.spongepowered.asm.mixin.injection.Inject
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable
 
 @Mixin(TitleScreen::class)
 class MixinTitleScreen(title: Text?) : Screen(title) {
 
     @Inject(
-        method = ["initWidgetsNormal()V"],
+        method = ["addNormalWidgets"],
         at = [At(
-            "RETURN"
+            "HEAD"
         )],
     )
-    private fun initWidgetsNormal(y: Int, spacingY: Int, ci: CallbackInfo) {
+    private fun addNormalWidgets(y: Int, spacingY: Int, cir: CallbackInfoReturnable<Int>) {
         this.addDrawableChild(
             ButtonWidget.builder(
                 Text.literal("Login")

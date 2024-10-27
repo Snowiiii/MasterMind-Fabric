@@ -8,7 +8,8 @@ import net.minecraft.enchantment.Enchantments
 import net.minecraft.entity.player.PlayerInventory
 import net.minecraft.item.Item
 import net.minecraft.item.ItemStack
-import net.minecraft.item.ToolItem
+import net.minecraft.item.PickaxeItem
+import net.minecraft.item.ToolMaterial
 import net.minecraft.screen.slot.SlotActionType
 import net.minecraft.server.world.ServerWorld
 
@@ -26,10 +27,11 @@ object InvManager : Module("InvManager", "Manages your Inventory", Category.PLAY
                         .register(ScreenEvents.AfterTick { screen ->
                             bestTools.clear()
 
+                            /**
                             // Find best Tools
                             for (slot in 0..PlayerInventory.MAIN_SIZE) {
                                 val stack = mc.player!!.inventory.getStack(slot)
-                                if (stack == null || stack.item !is ToolItem) continue
+                                if (stack == null || stack.item !is ToolIte) continue
                                 val item = stack.item as ToolItem
                                 val toolValue = getToolValue(item, stack)
                                 if (toolValue > bestTools.getOrPut(item) { HashMap() }.getOrPut(slot) { 0.0F }) {
@@ -40,8 +42,8 @@ object InvManager : Module("InvManager", "Manages your Inventory", Category.PLAY
                             // Throw other tools out
                             for (slot in 0..PlayerInventory.MAIN_SIZE) {
                                 val stack = mc.player!!.inventory.getStack(slot)
-                                if (stack == null || stack.item !is ToolItem) continue
-                                val item = stack.item as ToolItem
+                                if (stack == null || stack.item !is PickaxeItem) continue
+                                val item = stack.item as PickaxeItem
                                 val toolValue = getToolValue(item, stack)
                                 val bestItemMap = bestTools[item]
                                 if (bestItemMap != null) {
@@ -57,6 +59,7 @@ object InvManager : Module("InvManager", "Manages your Inventory", Category.PLAY
                                     }
                                 }
                             }
+                            **/
 
                         })
                 }
@@ -64,9 +67,9 @@ object InvManager : Module("InvManager", "Manages your Inventory", Category.PLAY
         })
     }
 
-    private fun getToolValue(item: ToolItem, stack: ItemStack): Float {
-        val itemPoints = item.material.durability + item.material.miningSpeedMultiplier + item.material.enchantability
-        val itemDamage = item.material.attackDamage
+    private fun getToolValue(material: ToolMaterial, stack: ItemStack): Float {
+        val itemPoints = material.durability + material.speed + material.enchantmentValue
+        val itemDamage = material.attackDamageBonus
 
         val dmgSource =
             mc.player!!.damageSources.playerAttack(mc.player!!)
