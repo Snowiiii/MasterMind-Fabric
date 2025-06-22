@@ -56,15 +56,15 @@ object CommandManager {
                 // TODO: Check for server commands before executing.
                 //   This requires parsing the command, checking if they match a server command
                 //   and then executing the command with the parse results.
-                dispatcher.execute(command, commandSource);
-                return false;
+                dispatcher.execute(command, commandSource)
+                return false
             } catch (e: CommandSyntaxException) {
-                LOGGER.warn("Syntax exception for client-sided command '{}'", command, e);
-                commandSource.sendError(getErrorMessage(e));
-                return false;
+                LOGGER.warn("Syntax exception for client-sided command '{}'", command, e)
+                commandSource.sendError(getErrorMessage(e))
+                return false
             } catch (e: Exception) {
-                LOGGER.warn("Error while executing client-sided command '{}'", command, e);
-                commandSource.sendError(Text.of(e.message));
+                LOGGER.warn("Error while executing client-sided command '{}'", command, e)
+                commandSource.sendError(Text.of(e.message))
                 return false
             }
         }

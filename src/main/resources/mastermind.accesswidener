@@ -12,7 +12,7 @@ accessible method net/minecraft/client/MinecraftClient doAttack ()Z
 accessible method net/minecraft/client/MinecraftClient doItemUse ()V
 accessible method net/minecraft/client/MinecraftClient handleBlockBreaking (Z)V
 
-accessible field net/minecraft/client/network/ClientPlayerEntity lastYaw F
-accessible field net/minecraft/client/network/ClientPlayerEntity lastPitch F
+accessible field net/minecraft/client/network/ClientPlayerEntity lastYawClient F
+accessible field net/minecraft/client/network/ClientPlayerEntity lastPitchClient F
 
 accessible method net/minecraft/entity/Entity movementInputToVelocity (Lnet/minecraft/util/math/Vec3d;FF)Lnet/minecraft/util/math/Vec3d;

@@ -11,14 +11,14 @@ import net.minecraft.client.util.InputUtil.Key
 import net.minecraft.text.Text
 import java.util.*
 
-class KeyBoardArgumentType : ArgumentType<InputUtil.Key> {
+class KeyBoardArgumentType : ArgumentType<Key> {
     private val INVALID_KEY_EXCEPTION = DynamicCommandExceptionType { key: Any? ->
         Text.literal(
             "Invalid Key $key"
         )
     }
 
-    override fun parse(reader: StringReader): InputUtil.Key {
+    override fun parse(reader: StringReader): Key {
         val string: String = reader.readUnquotedString()
         val key =
             InputUtil.fromTranslationKey("key.keyboard." + string[2].lowercase(Locale.getDefault()))

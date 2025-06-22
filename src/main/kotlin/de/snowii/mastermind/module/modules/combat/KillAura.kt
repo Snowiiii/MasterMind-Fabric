@@ -12,10 +12,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents
 import net.fabricmc.fabric.api.entity.event.v1.ServerEntityWorldChangeEvents
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents
-import net.minecraft.client.Keyboard
-import net.minecraft.client.option.KeyBinding
 import net.minecraft.entity.Entity
-import net.minecraft.network.packet.c2s.play.PlayerInteractEntityC2SPacket
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.util.Hand
 import net.minecraft.util.hit.EntityHitResult
@@ -54,7 +51,7 @@ object KillAura : Module("KillAura", "Attacks Entities nearby", Category.COMBAT)
     var hitTimer = TimeHelper()
     var rotations: FloatArray = FloatArray(2)
     var current_cps = (CPS_MIN.value..CPS_MAX.value).random()
-     var targets: Iterable<Entity>? = null
+    var targets: Iterable<Entity>? = null
 
 
     init {
@@ -133,7 +130,14 @@ object KillAura : Module("KillAura", "Attacks Entities nearby", Category.COMBAT)
 
     override fun onPreUpdate() {
         val RANGE = if (PRE_AIM.value) RANGE.value + PRE_AIM_RANGE.value else RANGE.value
-        targets = EntityTracker.entities(EntityTracker.EntityFilter(TARGET_PLAYERS.value, TARGET_MOBS.value, TARGET_ANIMAL.value, TARGET_VILLAGER.value), Optional.of(RANGE))
+        targets = EntityTracker.entities(
+            EntityTracker.EntityFilter(
+                TARGET_PLAYERS.value,
+                TARGET_MOBS.value,
+                TARGET_ANIMAL.value,
+                TARGET_VILLAGER.value
+            ), Optional.of(RANGE)
+        )
         targets!!.forEach { entity: Entity ->
             run {
                 if (ROTATION.value) {
@@ -187,7 +191,6 @@ object KillAura : Module("KillAura", "Attacks Entities nearby", Category.COMBAT)
     override fun onDisable() {
         targets = null
     }
-
 
 
 }

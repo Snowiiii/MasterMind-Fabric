@@ -1,9 +1,9 @@
 package de.snowii.mastermind.util
 
 import com.mojang.blaze3d.systems.RenderSystem
+import com.mojang.blaze3d.vertex.VertexFormat
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext
 import net.minecraft.client.MinecraftClient
-import net.minecraft.client.gl.ShaderProgramKeys
 import net.minecraft.client.gui.DrawContext
 import net.minecraft.client.render.*
 import net.minecraft.client.util.math.MatrixStack
@@ -35,13 +35,13 @@ object RenderUtil {
             .rotateY(-Math.toRadians(camera.yaw.toDouble()).toFloat())
             .add(camera.pos)
 
-        val matrix = context.matrixStack()!!;
+        val matrix = context.matrixStack()!!
         val matrix4f: Matrix4f = matrix.peek().positionMatrix
 
-        RenderSystem.enableBlend()
+       // RenderSystem.enableBlend()
         val vertexConsumer: VertexConsumer =
             context.consumers()!!.getBuffer(RenderLayer.getDebugLineStrip(lineWdith.toDouble()))
-        RenderSystem.defaultBlendFunc()
+        //  RenderSystem.defaultBlendFunc()
         matrix.push()
         vertexConsumer.vertex(matrix4f, center.x.toFloat(), center.y.toFloat(), center.z.toFloat())
             .color(red, green, blue, alpha)
@@ -52,7 +52,7 @@ object RenderUtil {
             (zPar - center.z).toFloat()
         ).color(red, green, blue, alpha)
         matrix.pop()
-        RenderSystem.disableBlend()
+        // RenderSystem.disableBlend()
     }
 
     fun smoothTrans(current: Double, last: Double): Float {
@@ -98,7 +98,7 @@ object RenderUtil {
         val cx = x + radius
         val cy = y + radius
         val angles = doubleArrayOf(Math.PI * 3.5, Math.PI * 3.0, Math.PI * 2.5, 0.0)
-        val radius = radius.toFloat();
+        val radius = radius.toFloat()
         val offsets = arrayOf(
             floatArrayOf(radius, radius),
             floatArrayOf(width - radius, radius),
@@ -108,20 +108,20 @@ object RenderUtil {
         /**
         val vertexconsumer: VertexConsumer = context.vertexConsumers.getBuffer(RenderLayer.getGui())
         for (index in 0..3) {
-            val startAngle = angles[index]
-            val offset = offsets[index]
-            vertexconsumer.vertex((cx + offset[0]), (cy + offset[1]), 0.0F)
-                .color(red, green, blue, alpha)
-            var angle = startAngle
-            while (angle <= startAngle + Math.PI / 2.0 + 0.01) {
-                vertexconsumer.vertex((cx - radius * cos(angle) + offset[0]).toFloat(),
-                    (cy + radius * sin(angle) + offset[1]).toFloat(), 0.0F)
-                    .color(red, green, blue, alpha)
-                angle += Math.PI / 2.0 * 0.01
-            }
+        val startAngle = angles[index]
+        val offset = offsets[index]
+        vertexconsumer.vertex((cx + offset[0]), (cy + offset[1]), 0.0F)
+        .color(red, green, blue, alpha)
+        var angle = startAngle
+        while (angle <= startAngle + Math.PI / 2.0 + 0.01) {
+        vertexconsumer.vertex((cx - radius * cos(angle) + offset[0]).toFloat(),
+        (cy + radius * sin(angle) + offset[1]).toFloat(), 0.0F)
+        .color(red, green, blue, alpha)
+        angle += Math.PI / 2.0 * 0.01
         }
-        **/
-        context.draw()
+        }
+         **/
+      //  context.draw()
     }
 
     fun renderTargetESPCircle(
@@ -151,12 +151,7 @@ object RenderUtil {
         var currentLineY: Double
 
         // We dont use vertex consumers so we can disable depth
-        RenderSystem.setShader(ShaderProgramKeys.POSITION_COLOR)
-        RenderSystem.depthMask(false)
-        RenderSystem.defaultBlendFunc()
         RenderSystem.lineWidth(width)
-        RenderSystem.disableDepthTest()
-        RenderSystem.enableBlend()
 
         val matrix4f: Matrix4f = matrices.peek().positionMatrix
         for (line in 0 until lines) {
@@ -166,7 +161,8 @@ object RenderUtil {
             var i = -boxHeight
             while (i <= boxHeight + 1f) {
                 val bufferBuilder =
-                    Tessellator.getInstance().begin(VertexFormat.DrawMode.DEBUG_LINE_STRIP, VertexFormats.POSITION_COLOR)
+                    Tessellator.getInstance()
+                        .begin(VertexFormat.DrawMode.DEBUG_LINE_STRIP, VertexFormats.POSITION_COLOR)
                 bufferBuilder.vertex(
                     matrix4f,
                     (xx - CENTER + sin((i - lineSmoothness) * 2) / bRadius).toFloat(),
@@ -185,13 +181,13 @@ object RenderUtil {
                     (zz - CENTER + cos(i * 2) / bRadius).toFloat()
                 ).color(red, green, blue, alpha)
                 i += lineSmoothness
-                BufferRenderer.drawWithGlobalProgram(bufferBuilder.end())
+                //BufferRenderer.drawWithGlobalProgram(bufferBuilder.end())
             }
             matrices.pop()
         }
-        RenderSystem.depthMask(true)
-        RenderSystem.disableBlend()
-        RenderSystem.enableDepthTest()
+//        RenderSystem.depthMask(true)
+//        RenderSystem.disableBlend()
+//        RenderSystem.enableDepthTest()
     }
 
 }

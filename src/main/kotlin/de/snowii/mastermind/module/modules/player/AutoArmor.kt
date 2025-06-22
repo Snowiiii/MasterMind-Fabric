@@ -6,7 +6,6 @@ import de.snowii.mastermind.util.TimeHelper
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents
 import net.minecraft.client.gui.screen.ingame.InventoryScreen
 import net.minecraft.entity.player.PlayerInventory
-import net.minecraft.item.ArmorItem
 import net.minecraft.item.ItemStack
 import net.minecraft.item.equipment.ArmorMaterial
 import net.minecraft.screen.slot.SlotActionType
@@ -44,26 +43,27 @@ object AutoArmor : Module("AutoArmor", "Manages your Armor", Category.PLAYER) {
                                 if (timeHelper.hasTimeReached(100L * delay)) {
                                     val bestArmorSlots = IntArray(4) { -1 }
                                     val bestArmorValues = FloatArray(4)
+
                                     /**
                                     for (type in 0..3) {
-                                        val stack = mc.player!!.inventory.getArmorStack(type)
-                                        if (stack == null || stack.item !is ArmorItem) continue
-                                        val item: ArmorItem = stack.item as ArmorItem
-                                        bestArmorValues[type] = getArmorValue(item, stack)
+                                    val stack = mc.player!!.inventory.getArmorStack(type)
+                                    if (stack == null || stack.item !is ArmorItem) continue
+                                    val item: ArmorItem = stack.item as ArmorItem
+                                    bestArmorValues[type] = getArmorValue(item, stack)
                                     }
 
                                     for (slot in 0..PlayerInventory.MAIN_SIZE) {
-                                        val stack = mc.player!!.inventory.getStack(slot)
-                                        if (stack == null || stack.item !is ArmorItem) continue
-                                        val item = stack.item as ArmorItem
-                                        val armorType = 0 // item.entitySlotId
-                                        val armorValue = getArmorValue(item, stack)
-                                        if (armorValue > bestArmorValues[armorType]) {
-                                            bestArmorSlots[armorType] = slot
-                                            bestArmorValues[armorType] = armorValue
-                                        }
+                                    val stack = mc.player!!.inventory.getStack(slot)
+                                    if (stack == null || stack.item !is ArmorItem) continue
+                                    val item = stack.item as ArmorItem
+                                    val armorType = 0 // item.entitySlotId
+                                    val armorValue = getArmorValue(item, stack)
+                                    if (armorValue > bestArmorValues[armorType]) {
+                                    bestArmorSlots[armorType] = slot
+                                    bestArmorValues[armorType] = armorValue
                                     }
-                                    **/
+                                    }
+                                     **/
 
                                     val types = mutableListOf(0, 1, 2, 3).shuffled()
                                     for (type in types) {

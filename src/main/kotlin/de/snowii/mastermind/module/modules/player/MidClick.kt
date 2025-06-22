@@ -2,10 +2,11 @@ package de.snowii.mastermind.module.modules.player
 
 import de.snowii.mastermind.module.Module
 import de.snowii.mastermind.util.PlayerUtil
-import net.fabricmc.fabric.api.event.client.player.ClientPickBlockGatherCallback
+import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.minecraft.entity.Entity
 import net.minecraft.entity.player.PlayerEntity
 import net.minecraft.item.ItemStack
+import net.minecraft.util.ActionResult
 import net.minecraft.util.Formatting
 import net.minecraft.util.hit.EntityHitResult
 import net.minecraft.util.hit.HitResult
@@ -15,12 +16,12 @@ object MidClick : Module("MidClick", "Allows you to add Friendly Players using M
     val friends: MutableList<UUID> = ArrayList<UUID>()
 
     init {
-        ClientPickBlockGatherCallback.EVENT.register(ClientPickBlockGatherCallback { player, result ->
+        UseEntityCallback.EVENT.register(UseEntityCallback { player, world, hand, entity, result  ->
             if (this.isToggled)
-                if (result.type == HitResult.Type.ENTITY) {
-                    progressEntity((result as EntityHitResult).entity)
+                if (result!!.type == HitResult.Type.ENTITY) {
+                    progressEntity(result.entity)
                 }
-            return@ClientPickBlockGatherCallback ItemStack.EMPTY
+            return@UseEntityCallback ActionResult::CONSUME.get()
         })
     }
 

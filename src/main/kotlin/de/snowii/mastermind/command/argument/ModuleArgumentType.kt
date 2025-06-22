@@ -12,16 +12,10 @@ import de.snowii.mastermind.module.ModuleManager
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource
 import net.minecraft.command.CommandSource
 import net.minecraft.text.Text
-import net.minecraft.world.GameMode
 import java.util.*
 import java.util.concurrent.CompletableFuture
-import java.util.stream.Collectors
-import java.util.stream.Stream
 
 class ModuleArgumentType : ArgumentType<Module> {
-    private val EXAMPLES: Collection<String> =
-        Stream.of(GameMode.SURVIVAL, GameMode.CREATIVE).map { obj: GameMode -> obj.getName() }
-            .collect(Collectors.toList())
 
     private val INVALID_MODULE_EXCEPTION = DynamicCommandExceptionType { module: Any? ->
         Text.literal(
@@ -46,7 +40,7 @@ class ModuleArgumentType : ArgumentType<Module> {
                 Arrays.stream(ModuleManager.modules.toTypedArray()).map { obj: Module -> obj.name }, builder
             )
         }
-        return Suggestions.empty();
+        return Suggestions.empty()
     }
 
     companion object {

@@ -49,7 +49,7 @@ class Panel(val title: String, var x: Int, var y: Int, modules: List<Module>, va
         }
 
         // Border
-        context.matrices.push()
+        context.matrices.pushMatrix()
         animator.runGLAnim(context.matrices)
 
         // Top
@@ -101,7 +101,7 @@ class Panel(val title: String, var x: Int, var y: Int, modules: List<Module>, va
             Color.ORANGE.rgb,
             false
         )
-        context.matrices.pop()
+        context.matrices.popMatrix()
     }
 
     fun mouseClicked(mouseX: Double, mouseY: Double, mouseButton: Int) {

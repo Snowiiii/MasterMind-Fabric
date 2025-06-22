@@ -63,9 +63,9 @@ object RotationUtils {
         player.yaw = yaw
         player.headYaw = yaw
         player.pitch = MathHelper.clamp(player.pitch, -90.0f, 90.0f)
-        player.prevPitch = pitch
-        player.prevYaw = yaw
-        player.prevPitch = MathHelper.clamp(player.prevPitch, -90.0f, 90.0f)
+        player.lastPitch = pitch
+        player.lastYaw = yaw
+        player.lastPitch = MathHelper.clamp(player.lastPitch, -90.0f, 90.0f)
         if (player.vehicle != null) {
             player.vehicle!!.onPassengerLookAround(mc.player)
         }

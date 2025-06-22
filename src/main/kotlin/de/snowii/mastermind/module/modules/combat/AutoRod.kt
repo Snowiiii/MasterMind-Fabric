@@ -48,7 +48,9 @@ object AutoRod : Module("AutoRod", "Attacks Entities with an Fishing Rod", Categ
             if (!mc.player!!.isUsingItem && timer.hasTimeReached((100 * current_delay).toLong())) {
                 val rod_slot = searchRod()
                 if (rod_slot != null) {
-                    val range = if (CUSTOM_RANGE.value) RANGE.value else { KillAura.RANGE.value + 0.2F }
+                    val range = if (CUSTOM_RANGE.value) RANGE.value else {
+                        KillAura.RANGE.value + 0.2F
+                    }
                     val targets = EntityTracker.entities(
                         EntityTracker.EntityFilter(
                             TARGET_PLAYERS.value,
@@ -59,7 +61,7 @@ object AutoRod : Module("AutoRod", "Attacks Entities with an Fishing Rod", Categ
                     ).filter { mc.player!!.distanceTo(it) >= range } // We dont want to Rod when attacking
                     targets.firstOrNull { entity: Entity? ->
                         if (entity != null) {
-                            oldSlot = mc.player!!.inventory.selectedSlot;
+                            oldSlot = mc.player!!.inventory.selectedSlot
                             mc.player!!.inventory.selectedSlot = rod_slot
                             mc.doItemUse()
                             shouldWait = true

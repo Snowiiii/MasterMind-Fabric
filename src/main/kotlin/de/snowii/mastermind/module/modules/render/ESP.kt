@@ -33,23 +33,28 @@ object ESP : Module("ESP", "Allows to see Entities throw Walls", Category.RENDER
         addSetting(WIDTH)
         WorldRenderEvents.BEFORE_DEBUG_RENDER.register(WorldRenderEvents.DebugRender { context: WorldRenderContext ->
             if (this.isToggled)
-                for (entity in EntityTracker.entities(EntityTracker.EntityFilter(TARGET_PLAYERS.value, TARGET_MOBS.value, TARGET_ANIMAL.value, TARGET_VILLAGER.value), Optional.empty())) {
-                        RenderUtil.draw3DLine(
-                            context,
-                            entity.x,
-                            entity.eyeY,
-                            entity.z,
-                            RED.value,
-                            GREEN.value,
-                            BLUE.value,
-                            ALPHA.value,
-                            WIDTH.value
-                        )
+                for (entity in EntityTracker.entities(
+                    EntityTracker.EntityFilter(
+                        TARGET_PLAYERS.value,
+                        TARGET_MOBS.value,
+                        TARGET_ANIMAL.value,
+                        TARGET_VILLAGER.value
+                    ), Optional.empty()
+                )) {
+                    RenderUtil.draw3DLine(
+                        context,
+                        entity.x,
+                        entity.eyeY,
+                        entity.z,
+                        RED.value,
+                        GREEN.value,
+                        BLUE.value,
+                        ALPHA.value,
+                        WIDTH.value
+                    )
                 }
         })
     }
-
-
 
 
 }

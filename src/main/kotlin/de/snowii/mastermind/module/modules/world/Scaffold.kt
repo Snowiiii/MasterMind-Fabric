@@ -156,7 +156,7 @@ object Scaffold : Module("Scaffold", "Makes you an professional bridger", Catego
                 if (actionResult2 is ActionResult.Success) {
                     if (actionResult2.swingSource() == ActionResult.SwingSource.CLIENT) {
                         player.swingHand(hand)
-                        if (!itemStack.isEmpty && (itemStack.count != i || mc.interactionManager!!.hasCreativeInventory())) {
+                        if (!itemStack.isEmpty && (itemStack.count != i || mc.player!!.isInCreativeMode)) {
                             mc.gameRenderer.firstPersonRenderer.resetEquipProgress(hand)
                         }
                     }
